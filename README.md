@@ -238,7 +238,9 @@ $ pnpm i
 
 ## LICENSE
 
-[MIT © Knowledge Work Inc.][license]
+See [LICENSE][license].
+
+Copyright 2024 Knowledge Work Inc.
 
 [badge-build]: https://img.shields.io/github/actions/workflow/status/knowledge-work/command-action/ci.yaml?style=flat-square
 [badge-license]: https://img.shields.io/github/license/knowledge-work/command-action?style=flat-square
