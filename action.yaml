@@ -11,7 +11,6 @@ inputs:
     required: true
   allowed_contexts:
     description: 'The comment contexts that trigger the IssueOps command, specified as a comma-separated list.'
-    required: true
     default: 'issue,pull_request'
 
 outputs:

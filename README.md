@@ -168,7 +168,7 @@ Supports null in JSON format.
 | ID                 | Required           | Default              | Description                                                                                  |
 | :----------------- | :----------------- | :------------------- | :------------------------------------------------------------------------------------------- |
 | `command`          | :white_check_mark: | n/a                  | The name of the command to be used in IssueOps.                                              |
-| `allowed_contexts` | :white_check_mark: | `issue,pull_request` | The comment contexts that trigger the IssueOps command, specified as a comma-separated list. |
+| `allowed_contexts` |                    | `issue,pull_request` | The comment contexts that trigger the IssueOps command, specified as a comma-separated list. |
 
 <!-- gha-inputs-end -->
 
