@@ -1,0 +1,29 @@
+name: 'IssueOps Command Action'
+description: 'IssueOps commands in GitHub Actions.'
+author: 'knowledge-work'
+branding:
+  color: white
+  icon: message-square
+
+inputs:
+  command:
+    description: 'The name of the command to be used in IssueOps.'
+    required: true
+  allowed_contexts:
+    description: 'The comment contexts that trigger the IssueOps command, specified as a comma-separated list.'
+    required: true
+    default: 'issue,pull_request'
+
+outputs:
+  continue:
+    description: 'Indicates whether the IssueOps command was triggered and the workflow should continue with the string `"true"`. If the action did not complete successfully, `"false"` will be used.'
+  params:
+    description: 'The parameters of the triggered IssueOps command, provided as a JSON string.'
+  comment_id:
+    description: 'The ID of the comment that triggered this action.'
+  actor:
+    description: 'The GitHub handle of the actor who executed the IssueOps command.'
+
+runs:
+  using: 'node20'
+  main: 'dist/index.js'
