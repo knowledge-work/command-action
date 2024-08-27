@@ -9,7 +9,7 @@ IssueOps commands in GitHub Actions.
 <!-- gha-description-end -->
 
 [![Build][badge-build]][build]
-[![MIT LICENSE][badge-license]][license]
+[![Apache-2.0][badge-license]][license]
 [![code style: prettier][badge-prettier]][prettier]
 [![semantic-release: angular][badge-semantic-release]][semantic-release]
 
