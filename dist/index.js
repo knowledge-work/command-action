@@ -34254,7 +34254,7 @@ const unicodeIdContinueReg = /[0-9A-Z_a-z\xAA\xB5\xB7\xBA\xC0-\xD6\xD8-\xF6\xF8-
 
 /** @see https://github.com/GregRos/parjs/issues/59 */
 /* eslint-disable @typescript-eslint/no-require-imports, @typescript-eslint/consistent-type-imports */
-const { anyCharOf, string, stringLen, noCharOf, anyStringOf, regexp, float: parse_float, whitespace, eof } = __nccwpck_require__(8768);
+const { rest, anyCharOf, string, stringLen, noCharOf, anyStringOf, regexp, float: parse_float, whitespace, eof } = __nccwpck_require__(8768);
 const { map, qthen, or, many, between, then, thenq, manySepBy, stringify } = __nccwpck_require__(7935);
 /* eslint-enable @typescript-eslint/no-require-imports, @typescript-eslint/consistent-type-imports */
 // String
@@ -34303,8 +34303,6 @@ const pPair = pKey
 const pParams = pPair.pipe(manySepBy(',')).pipe(map((pair) => Object.assign({}, ...pair)));
 // Command
 const pCommand = string('.').pipe(qthen(pIdent)).pipe(between(whitespace()));
-// Program
-const pProgram = pCommand.pipe(then(pParams.pipe(or(eof())))).pipe(map((v) => ({ command: v[0], params: v[1] })));
 const parse = (input) => {
     const _input = input.trim();
     if (_input === '') {
@@ -34314,17 +34312,26 @@ const parse = (input) => {
             error: null,
         };
     }
-    const result = pProgram.parse(_input);
-    if (!result.isOk) {
+    const command = pCommand.pipe(then(rest())).parse(_input);
+    if (!command.isOk) {
+        return {
+            command: null,
+            params: {},
+            error: null,
+        };
+    }
+    const params = pParams.pipe(or(eof())).parse(command.value[1]);
+    if (!params.isOk) {
         return {
             command: null,
             params: null,
-            error: result.toString(),
+            error: params.toString(),
         };
     }
     return {
         error: null,
-        ...result.value,
+        command: command.value[0],
+        params: params.value,
     };
 };
 

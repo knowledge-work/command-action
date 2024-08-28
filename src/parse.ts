@@ -2,7 +2,7 @@ import { unicodeIdContinueReg, unicodeIdStartReg } from './unicode-regex.js';
 
 /** @see https://github.com/GregRos/parjs/issues/59 */
 /* eslint-disable @typescript-eslint/no-require-imports, @typescript-eslint/consistent-type-imports */
-const { anyCharOf, string, stringLen, noCharOf, anyStringOf, regexp, float, whitespace, eof } =
+const { rest, anyCharOf, string, stringLen, noCharOf, anyStringOf, regexp, float, whitespace, eof } =
   require('parjs') as typeof import('parjs');
 const { map, qthen, or, many, between, then, thenq, manySepBy, stringify } =
   require('parjs/combinators') as typeof import('parjs/combinators');
@@ -76,8 +76,8 @@ const pParams = pPair.pipe(manySepBy(',')).pipe(map((pair) => Object.assign({}, 
 // Command
 const pCommand = string('.').pipe(qthen(pIdent)).pipe(between(whitespace()));
 
-// Program
-const pProgram = pCommand.pipe(then(pParams.pipe(or(eof())))).pipe(map((v) => ({ command: v[0], params: v[1] })));
+// // Program
+// const pProgram = pCommand.pipe(then(pParams.pipe(or(eof())))).pipe(map((v) => ({ command: v[0], params: v[1] })));
 
 // Main Parser
 export type Params = Record<string, string | number | boolean | null>;
@@ -108,17 +108,27 @@ export const parse = (input: string): ParseResult => {
     };
   }
 
-  const result = pProgram.parse(_input);
-  if (!result.isOk) {
+  const command = pCommand.pipe(then(rest())).parse(_input);
+  if (!command.isOk) {
+    return {
+      command: null,
+      params: {},
+      error: null,
+    };
+  }
+
+  const params = pParams.pipe(or(eof())).parse(command.value[1]);
+  if (!params.isOk) {
     return {
       command: null,
       params: null,
-      error: result.toString(),
+      error: params.toString(),
     };
   }
 
   return {
     error: null,
-    ...result.value,
+    command: command.value[0],
+    params: params.value,
   };
 };
