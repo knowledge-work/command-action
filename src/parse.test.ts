@@ -41,6 +41,16 @@ test.each([
   ],
 
   [
+    'non command',
+    `foo bar=baz`,
+    {
+      command: null,
+      params: {},
+      error: null,
+    },
+  ],
+
+  [
     'boolean - true',
     `.command key=true`,
     {
