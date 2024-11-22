@@ -165,10 +165,10 @@ Supports null in JSON format.
 
 <!-- gha-inputs-start -->
 
-| ID                 | Required           | Default              | Description                                                                                  |
-| :----------------- | :----------------- | :------------------- | :------------------------------------------------------------------------------------------- |
-| `command`          | :white_check_mark: | n/a                  | The name of the command to be used in IssueOps.                                              |
-| `allowed_contexts` |                    | `issue,pull_request` | The comment contexts that trigger the IssueOps command, specified as a comma-separated list. |
+| ID                 | Required           | Default              | Description                                                                                       |
+| :----------------- | :----------------- | :------------------- | :------------------------------------------------------------------------------------------------ |
+| `command`          | :white_check_mark: | n/a                  | The name of the command to be used in IssueOps, which can be specified as a comma-separated list. |
+| `allowed_contexts` |                    | `issue,pull_request` | The comment contexts that trigger the IssueOps command, specified as a comma-separated list.      |
 
 <!-- gha-inputs-end -->
 
