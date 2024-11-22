@@ -109,8 +109,8 @@ importers:
         specifier: 2.0.5
         version: 2.0.5(@types/node@22.5.0)
       yaml:
-        specifier: 2.5.0
-        version: 2.5.0
+        specifier: 2.6.1
+        version: 2.6.1
       zod:
         specifier: 3.23.8
         version: 3.23.8
@@ -3139,6 +3139,11 @@ packages:
     engines: {node: '>= 14'}
     hasBin: true
 
+  yaml@2.6.1:
+    resolution: {integrity: sha512-7r0XPzioN/Q9kXBro/XPnA6kznR73DHq+GXh5ON7ZozRO6aMjbmiBuKste2wslTFkC5d1dw0GooOCepZXJ2SAg==}
+    engines: {node: '>= 14'}
+    hasBin: true
+
   yargs-parser@20.2.9:
     resolution: {integrity: sha512-y11nGElTIV+CT3Zv9t7VKl+Q3hTQoT9a1Qzezhhl6Rp21gJ/IVTW7Z3y9EWXhuUBC2Shnf+DX0antecpAwSP8w==}
     engines: {node: '>=10'}
@@ -4824,7 +4829,7 @@ snapshots:
     dependencies:
       debug: 4.3.6
       meow: 11.0.0
-      yaml: 2.5.0
+      yaml: 2.6.1
       zod: 3.23.8
       zod-error: 1.5.0
     transitivePeerDependencies:
@@ -6241,6 +6246,8 @@ snapshots:
   yallist@4.0.0: {}
 
   yaml@2.5.0: {}
+
+  yaml@2.6.1: {}
 
   yargs-parser@20.2.9: {}
 
