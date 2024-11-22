@@ -59,6 +59,7 @@ const run = async () => {
   core.setOutput('comment_id', context.payload.comment!.id);
   core.setOutput('actor', context.payload.comment!['user'].login);
 
+  const commands = str2array(inputs.command);
   const body = (context.payload.comment?.['body'] ?? '') as string;
   const result = parse(body);
   core.debug(`parse result: ${JSON.stringify(result)}`);
@@ -75,15 +76,16 @@ const run = async () => {
     return 0;
   }
 
-  if (result.command !== inputs.command) {
+  if (!commands.includes(result.command)) {
     core.setOutput('continue', 'false');
     core.info(
-      `The "${result.command}" command was detected in the comment. However, since it is not the "${inputs.command}" command, the trigger has been canceled.`,
+      `The "${result.command}" command was detected in the comment. However, since it is not included in the list of commands ("${commands.join(', ')}"), the trigger has been canceled.`,
     );
     return 0;
   }
 
   core.setOutput('continue', 'true');
+  core.setOutput('command', result.command);
   core.setOutput('params', JSON.stringify(result.params));
 
   core.info('params:');

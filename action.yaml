@@ -7,7 +7,7 @@ branding:
 
 inputs:
   command:
-    description: 'The name of the command to be used in IssueOps.'
+    description: 'The name of the command to be used in IssueOps, which can be specified as a comma-separated list.'
     required: true
   allowed_contexts:
     description: 'The comment contexts that trigger the IssueOps command, specified as a comma-separated list.'

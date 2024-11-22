@@ -34197,6 +34197,7 @@ const run = async () => {
     _actions_core__WEBPACK_IMPORTED_MODULE_0__.setOutput('issue_number', _actions_github__WEBPACK_IMPORTED_MODULE_1__.context.payload.issue.number);
     _actions_core__WEBPACK_IMPORTED_MODULE_0__.setOutput('comment_id', _actions_github__WEBPACK_IMPORTED_MODULE_1__.context.payload.comment.id);
     _actions_core__WEBPACK_IMPORTED_MODULE_0__.setOutput('actor', _actions_github__WEBPACK_IMPORTED_MODULE_1__.context.payload.comment.user.login);
+    const commands = (0,_utils_js__WEBPACK_IMPORTED_MODULE_4__/* .str2array */ .Z)(inputs.command);
     const body = (_actions_github__WEBPACK_IMPORTED_MODULE_1__.context.payload.comment?.['body'] ?? '');
     const result = (0,_parse_js__WEBPACK_IMPORTED_MODULE_3__/* .parse */ .Q)(body);
     _actions_core__WEBPACK_IMPORTED_MODULE_0__.debug(`parse result: ${JSON.stringify(result)}`);
@@ -34210,12 +34211,13 @@ const run = async () => {
         _actions_core__WEBPACK_IMPORTED_MODULE_0__.info('No command was detected in the comment.');
         return 0;
     }
-    if (result.command !== inputs.command) {
+    if (!commands.includes(result.command)) {
         _actions_core__WEBPACK_IMPORTED_MODULE_0__.setOutput('continue', 'false');
-        _actions_core__WEBPACK_IMPORTED_MODULE_0__.info(`The "${result.command}" command was detected in the comment. However, since it is not the "${inputs.command}" command, the trigger has been canceled.`);
+        _actions_core__WEBPACK_IMPORTED_MODULE_0__.info(`The "${result.command}" command was detected in the comment. However, since it is not included in the list of commands ("${commands.join(', ')}"), the trigger has been canceled.`);
         return 0;
     }
     _actions_core__WEBPACK_IMPORTED_MODULE_0__.setOutput('continue', 'true');
+    _actions_core__WEBPACK_IMPORTED_MODULE_0__.setOutput('command', result.command);
     _actions_core__WEBPACK_IMPORTED_MODULE_0__.setOutput('params', JSON.stringify(result.params));
     _actions_core__WEBPACK_IMPORTED_MODULE_0__.info('params:');
     _actions_core__WEBPACK_IMPORTED_MODULE_0__.info(JSON.stringify(result.params, null, 2));
@@ -34347,7 +34349,10 @@ const parse = (input) => {
 /**
  * Helpers
  */
-const str2array = (input) => input.split(',').map((s) => s.trim());
+const str2array = (input) => input
+    .split(',')
+    .map((s) => s.trim())
+    .filter((s) => s !== '');
 
 
 /***/ }),
