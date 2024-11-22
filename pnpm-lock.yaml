@@ -52,8 +52,8 @@ importers:
         specifier: 1.6.5
         version: 1.6.5
       '@vercel/ncc':
-        specifier: 0.38.1
-        version: 0.38.1
+        specifier: 0.38.3
+        version: 0.38.3
       conventional-changelog-conventionalcommits:
         specifier: 8.0.0
         version: 8.0.0
@@ -898,8 +898,8 @@ packages:
   '@unicode/unicode-15.0.0@1.6.5':
     resolution: {integrity: sha512-eautd3KG0MczbL9fRaHlOn+4nzdD82mV5Y3gbqFsLf4cgO8PY0nv62PgcYfdFq+95d6Apmv52eWTll1xamLkxQ==}
 
-  '@vercel/ncc@0.38.1':
-    resolution: {integrity: sha512-IBBb+iI2NLu4VQn3Vwldyi2QwaXt5+hTyh58ggAMoCGE6DJmPvwL3KPBWcJl1m9LYPChBLE980Jw+CS4Wokqxw==}
+  '@vercel/ncc@0.38.3':
+    resolution: {integrity: sha512-rnK6hJBS6mwc+Bkab+PGPs9OiS0i/3kdTO+CkI8V0/VrW3vmz7O2Pxjw/owOlmo6PKEIxRSeZKv/kuL9itnpYA==}
     hasBin: true
 
   '@vitest/expect@2.0.5':
@@ -3884,7 +3884,7 @@ snapshots:
 
   '@unicode/unicode-15.0.0@1.6.5': {}
 
-  '@vercel/ncc@0.38.1': {}
+  '@vercel/ncc@0.38.3': {}
 
   '@vitest/expect@2.0.5':
     dependencies:
