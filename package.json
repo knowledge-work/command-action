@@ -75,7 +75,7 @@
     "@types/eslint__js": "8.42.3",
     "@types/node": "22.5.0",
     "@unicode/unicode-15.0.0": "1.6.5",
-    "@vercel/ncc": "0.38.1",
+    "@vercel/ncc": "0.38.3",
     "conventional-changelog-conventionalcommits": "8.0.0",
     "eslint": "9.9.1",
     "eslint-config-prettier": "9.1.0",
