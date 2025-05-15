@@ -176,12 +176,14 @@ Supports null in JSON format.
 
 <!-- gha-outputs-start -->
 
-| ID           | Description                                                                                                                                                                          |
-| :----------- | :----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `continue`   | Indicates whether the IssueOps command was triggered and the workflow should continue with the string `"true"`. If the action did not complete successfully, `"false"` will be used. |
-| `params`     | The parameters of the triggered IssueOps command, provided as a JSON string.                                                                                                         |
-| `comment_id` | The ID of the comment that triggered this action.                                                                                                                                    |
-| `actor`      | The GitHub handle of the actor who executed the IssueOps command.                                                                                                                    |
+| ID             | Description                                                                                                                                                                          |
+| :------------- | :----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `continue`     | Indicates whether the IssueOps command was triggered and the workflow should continue with the string `"true"`. If the action did not complete successfully, `"false"` will be used. |
+| `params`       | The parameters of the triggered IssueOps command, provided as a JSON string.                                                                                                         |
+| `comment_id`   | The ID of the comment that triggered this action.                                                                                                                                    |
+| `actor`        | The GitHub handle of the actor who executed the IssueOps command.                                                                                                                    |
+| `issue_number` | The issue number of the comment that triggered this action.                                                                                                                          |
+| `command`      | The command of the triggered IssueOps command.                                                                                                                                       |
 
 <!-- gha-outputs-end -->
 

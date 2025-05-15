@@ -22,6 +22,10 @@ outputs:
     description: 'The ID of the comment that triggered this action.'
   actor:
     description: 'The GitHub handle of the actor who executed the IssueOps command.'
+  issue_number:
+    description: 'The issue number of the comment that triggered this action.'
+  command:
+    description: 'The command of the triggered IssueOps command.'
 
 runs:
   using: 'node20'
