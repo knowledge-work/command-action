@@ -73,7 +73,7 @@
     "@tsconfig/node20": "20.1.4",
     "@tsconfig/strictest": "2.0.5",
     "@types/eslint__js": "8.42.3",
-    "@types/node": "22.5.0",
+    "@types/node": "22.15.21",
     "@unicode/unicode-15.0.0": "1.6.5",
     "@vercel/ncc": "0.38.1",
     "conventional-changelog-conventionalcommits": "8.0.0",
