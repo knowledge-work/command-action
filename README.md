@@ -229,12 +229,10 @@ Introducing the steps for developing `command-action`.
 
 ### Setup
 
-Using a Node.js Version Manager such as `asdf` or `nodenv`, activate the version of Node.js written in `.node-version`.
-
-Next, activate `pnpm` using `corepack`, and install the dependent packages.
+Using [mise](https://mise.jdx.dev/), activate the versions of Node.js and pnpm written in `.mise.toml`.
 
 ```bash
-$ corepack enable pnpm
+$ mise install
 $ pnpm i
 ```
 

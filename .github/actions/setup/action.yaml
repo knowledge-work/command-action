@@ -1,0 +1,22 @@
+name: setup
+
+runs:
+  using: composite
+  steps:
+    - uses: jdx/mise-action@1648a7812b9aeae629881980618f079932869151 # v4.0.1
+
+    - name: Get pnpm store directory
+      id: pnpm-store
+      run: echo "path=$(pnpm store path)" >> "$GITHUB_OUTPUT"
+      shell: bash
+
+    - name: Cache pnpm store
+      uses: actions/cache@668228422ae6a00e4ad889ee87cd7109ec5666a7 # v5.0.4
+      with:
+        path: ${{ steps.pnpm-store.outputs.path }}
+        key: pnpm-store-${{ runner.os }}-${{ hashFiles('**/pnpm-lock.yaml') }}
+        restore-keys: |
+          pnpm-store-${{ runner.os }}-
+
+    - run: pnpm i --frozen-lockfile
+      shell: bash
