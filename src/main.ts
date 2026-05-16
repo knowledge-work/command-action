@@ -6,7 +6,7 @@ import { str2array } from './utils.js';
 
 const validContexts = new Set(['issue', 'pull_request']);
 
-const isValidContext = (inputs: Inputs) => {
+const isValidContext = (inputs: Inputs, isPr: boolean) => {
   if (context.eventName !== 'issue_comment') {
     core.warning(`This action only supports the "issue_comment" event, but received "${context.eventName}".`);
     return false;
@@ -22,7 +22,6 @@ const isValidContext = (inputs: Inputs) => {
     return false;
   }
 
-  const isPr = context?.payload?.issue?.['pull_request'] != null;
   if (allowedContexts.length === 1) {
     switch (allowedContexts[0]) {
       case 'issue': {
@@ -45,16 +44,21 @@ const isValidContext = (inputs: Inputs) => {
   return true;
 };
 
-const run = async () => {
+export const run = async () => {
   const inputs = getInputs();
   core.debug(`inputs: ${JSON.stringify(inputs)}`);
 
-  if (!isValidContext(inputs)) {
+  const isPr = context?.payload?.issue?.['pull_request'] != null;
+
+  if (!isValidContext(inputs, isPr)) {
     core.setOutput('continue', 'false');
     return 0;
   }
 
-  core.setOutput('issue_number', context.payload.issue!.number!);
+  const issueNumber = context.payload.issue!.number!;
+  core.setOutput('issue_number', issueNumber);
+  core.setOutput('number', issueNumber);
+  core.setOutput('context', isPr ? 'pull_request' : 'issue');
   core.setOutput('comment_id', context.payload.comment!.id);
   core.setOutput('actor', context.payload.comment!['user'].login);
 
@@ -92,10 +96,3 @@ const run = async () => {
 
   return 0;
 };
-
-try {
-  process.exit(await run());
-} catch (e) {
-  core.setFailed(e as Error);
-  process.exit(1);
-}

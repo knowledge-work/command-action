@@ -6,13 +6,14 @@ This file provides guidance to AI coding agents (Claude Code, Codex CLI, etc.) w
 
 `IssueOps Command Action` — a JavaScript GitHub Action that parses `.command key=value, ...` comments on issues / PRs and emits structured outputs (`continue`, `params`, `command`, `actor`, `comment_id`, `issue_number`). See `action.yaml` for the full I/O contract.
 
-- Entrypoint: `src/main.ts` → bundled to `dist/index.js` via `@vercel/ncc`
+- Entrypoint: `src/index.ts` → bundled to `dist/index.js` via `@vercel/ncc`. `src/index.ts` is the thin runner that calls `run` from `src/main.ts`; keep `src/main.ts` side-effect-free for testability.
 - Runtime: Node 24 (`runs.using: node24` in `action.yaml`)
 - Core parser: `src/parse.ts`, built on `parjs` combinators
 
 ## Source layout
 
-- `src/main.ts` — action entrypoint
+- `src/index.ts` — thin runner: invokes `run()` from `src/main.ts` and bridges to `process.exit`
+- `src/main.ts` — action logic (exports `run`); kept side-effect-free for testability
 - `src/parse.ts` — IssueOps command parser
 - `src/utils.ts` — small helpers
 - `src/*.test.ts` — vitest tests, colocated with source

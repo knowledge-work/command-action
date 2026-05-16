@@ -23,7 +23,11 @@ outputs:
   actor:
     description: 'The GitHub handle of the actor who executed the IssueOps command.'
   issue_number:
-    description: 'The issue number of the comment that triggered this action.'
+    description: '[Deprecated] The issue number of the comment that triggered this action. Use `number` instead. This output will be removed in the next major release.'
+  number:
+    description: 'The number of the issue or pull request that triggered this action.'
+  context:
+    description: 'The context that triggered this action. One of `"issue"` or `"pull_request"`.'
   command:
     description: 'The command of the triggered IssueOps command.'
 
