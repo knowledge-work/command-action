@@ -181,7 +181,9 @@ Supports null in JSON format.
 | `params`       | The parameters of the triggered IssueOps command, provided as a JSON string.                                                                                                         |
 | `comment_id`   | The ID of the comment that triggered this action.                                                                                                                                    |
 | `actor`        | The GitHub handle of the actor who executed the IssueOps command.                                                                                                                    |
-| `issue_number` | The issue number of the comment that triggered this action.                                                                                                                          |
+| `issue_number` | [Deprecated] The issue number of the comment that triggered this action. Use `number` instead. This output will be removed in the next major release.                                |
+| `number`       | The number of the issue or pull request that triggered this action.                                                                                                                  |
+| `context`      | The context that triggered this action. One of `"issue"` or `"pull_request"`.                                                                                                        |
 | `command`      | The command of the triggered IssueOps command.                                                                                                                                       |
 
 <!-- gha-outputs-end -->
