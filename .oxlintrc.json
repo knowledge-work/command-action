@@ -1,0 +1,27 @@
+{
+  "$schema": "./node_modules/oxlint/configuration_schema.json",
+  "plugins": ["typescript"],
+  "ignorePatterns": ["dist/"],
+  "rules": {
+    "no-empty": ["error", { "allowEmptyCatch": true }],
+    "no-console": "error",
+    "no-nested-ternary": "error",
+    "typescript/consistent-type-definitions": ["error", "type"],
+    "typescript/consistent-type-assertions": "error",
+    "typescript/consistent-type-imports": "error",
+    "typescript/array-type": "error",
+    "typescript/no-use-before-define": "error",
+    "typescript/no-explicit-any": "error",
+    "typescript/ban-ts-comment": "error",
+    "typescript/no-empty-object-type": "error",
+    "typescript/no-unused-vars": "error"
+  },
+  "overrides": [
+    {
+      "files": ["scripts/**/*"],
+      "rules": {
+        "no-console": "off"
+      }
+    }
+  ]
+}

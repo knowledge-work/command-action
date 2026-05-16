@@ -1,9 +1,8 @@
 import * as core from '@actions/core';
 import { context } from '@actions/github';
-import type { Inputs } from './inputs.js';
-import { getInputs } from './inputs.js';
-import { str2array } from './utils.js';
+import { type Inputs, getInputs } from './inputs.js';
 import { parse } from './parse.js';
+import { str2array } from './utils.js';
 
 const validContexts = new Set(['issue', 'pull_request']);
 

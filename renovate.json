@@ -1,7 +1,6 @@
 {
   "extends": [
     "config:js-lib",
-    "group:typescript-eslintMonorepo",
     "group:commitlintMonorepo",
     ":semanticCommits",
     ":semanticCommitTypeAll(chore)",

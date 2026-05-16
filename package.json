@@ -3,44 +3,67 @@
   "type": "module",
   "scripts": {
     "build": "ncc build src/main.ts --source-map --license licenses.txt",
-    "format": "pnpm format:eslint && pnpm format:prettier",
-    "format:eslint": "pnpm lint --fix",
-    "format:prettier": "prettier --write .",
+    "format": "oxfmt --write .",
+    "format:check": "oxfmt --check .",
     "generate": "pnpm generate:docs && pnpm generate:inputs && pnpm generate:unicode-regex && pnpm format",
     "generate:docs": "gha-docgen --style table",
     "generate:inputs": "tsx ./scripts/generate-inputs.ts",
     "generate:unicode-regex": "tsx ./scripts/generate-unicode-regex.ts",
-    "lint": "eslint .",
+    "lint": "oxlint --max-warnings=0",
     "prepare": "simple-git-hooks",
     "release": "semantic-release",
     "test": "vitest run",
     "test:watch": "vitest watch",
     "typecheck": "tsc"
   },
+  "dependencies": {
+    "@actions/core": "^1.10.1",
+    "@actions/github": "^6.0.0",
+    "parjs": "^1.3.9"
+  },
+  "devDependencies": {
+    "@commitlint/cli": "19.8.1",
+    "@commitlint/config-conventional": "19.8.1",
+    "@semantic-release/commit-analyzer": "13.0.0",
+    "@semantic-release/github": "10.3.5",
+    "@semantic-release/release-notes-generator": "14.0.1",
+    "@tsconfig/node24": "24.0.4",
+    "@tsconfig/strictest": "2.0.5",
+    "@types/node": "24.12.4",
+    "@unicode/unicode-15.0.0": "1.6.5",
+    "@vercel/ncc": "0.38.1",
+    "conventional-changelog-conventionalcommits": "8.0.0",
+    "gha-docgen": "1.0.1",
+    "lint-staged": "15.5.2",
+    "oxfmt": "0.50.0",
+    "oxlint": "1.65.0",
+    "regenerate": "1.4.2",
+    "semantic-release": "24.2.0",
+    "semantic-release-major-tag": "0.3.2",
+    "simple-git-hooks": "2.11.1",
+    "ts-morph": "24.0.0",
+    "tsx": "4.19.4",
+    "typescript": "5.9.3",
+    "vitest": "2.0.5",
+    "yaml": "2.5.0",
+    "zod": "3.23.8"
+  },
   "simple-git-hooks": {
     "pre-commit": "npx lint-staged",
     "commit-msg": "npx --no -- commitlint --edit ${1}",
     "preserveUnused": true
   },
+  "lint-staged": {
+    "*.{js,ts}": [
+      "oxfmt --write",
+      "oxlint --max-warnings=0"
+    ],
+    "*.{md,yaml,json}": "oxfmt --write"
+  },
   "commitlint": {
     "extends": [
       "@commitlint/config-conventional"
     ]
-  },
-  "lint-staged": {
-    "*.{js,ts,md,yaml,json}": "prettier --write"
-  },
-  "prettier": {
-    "arrowParens": "always",
-    "plugins": [
-      "prettier-plugin-packagejson"
-    ],
-    "printWidth": 120,
-    "semi": true,
-    "singleQuote": true,
-    "tabWidth": 2,
-    "trailingComma": "all",
-    "useTabs": false
   },
   "release": {
     "branches": [
@@ -57,44 +80,5 @@
       "@semantic-release/github",
       "semantic-release-major-tag"
     ]
-  },
-  "dependencies": {
-    "@actions/core": "^1.10.1",
-    "@actions/github": "^6.0.0",
-    "parjs": "^1.3.9"
-  },
-  "devDependencies": {
-    "@commitlint/cli": "19.8.1",
-    "@commitlint/config-conventional": "19.8.1",
-    "@eslint/js": "9.26.0",
-    "@semantic-release/commit-analyzer": "13.0.0",
-    "@semantic-release/github": "10.3.5",
-    "@semantic-release/release-notes-generator": "14.0.1",
-    "@tsconfig/node24": "24.0.4",
-    "@tsconfig/strictest": "2.0.5",
-    "@types/eslint__js": "8.42.3",
-    "@types/node": "24.12.4",
-    "@unicode/unicode-15.0.0": "1.6.5",
-    "@vercel/ncc": "0.38.1",
-    "conventional-changelog-conventionalcommits": "8.0.0",
-    "eslint": "9.26.0",
-    "eslint-config-prettier": "9.1.0",
-    "eslint-plugin-import": "2.31.0",
-    "gha-docgen": "1.0.1",
-    "globals": "15.15.0",
-    "lint-staged": "15.5.2",
-    "prettier": "3.3.3",
-    "prettier-plugin-packagejson": "2.5.3",
-    "regenerate": "1.4.2",
-    "semantic-release": "24.2.0",
-    "semantic-release-major-tag": "0.3.2",
-    "simple-git-hooks": "2.11.1",
-    "ts-morph": "24.0.0",
-    "tsx": "4.19.4",
-    "typescript": "5.9.3",
-    "typescript-eslint": "8.59.3",
-    "vitest": "2.0.5",
-    "yaml": "2.5.0",
-    "zod": "3.23.8"
   }
 }

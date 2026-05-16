@@ -10,7 +10,6 @@ IssueOps commands in GitHub Actions.
 
 [![Build][badge-build]][build]
 [![Apache-2.0][badge-license]][license]
-[![code style: prettier][badge-prettier]][prettier]
 [![semantic-release: angular][badge-semantic-release]][semantic-release]
 
 </div>
@@ -244,9 +243,7 @@ Copyright 2024 Knowledge Work Inc.
 
 [badge-build]: https://img.shields.io/github/actions/workflow/status/knowledge-work/command-action/ci.yaml?style=flat-square
 [badge-license]: https://img.shields.io/github/license/knowledge-work/command-action?style=flat-square
-[badge-prettier]: https://img.shields.io/badge/code_style-prettier-ff69b4.svg?style=flat-square
 [badge-semantic-release]: https://img.shields.io/badge/semantic--release-angular-e10079?logo=semantic-release&style=flat-square
 [build]: https://github.com/knowledge-work/command-action/actions/workflows/ci.yaml
 [license]: ./LICENSE
-[prettier]: https://github.com/prettier/prettier
 [semantic-release]: https://github.com/semantic-release/semantic-release
