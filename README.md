@@ -275,6 +275,10 @@ $ mise install
 $ pnpm i
 ```
 
+### E2E (self-dogfood)
+
+The action is validated against real GitHub event payloads via an environment-gated workflow. See [`docs/e2e.md`](./docs/e2e.md) for the comment convention, security model, and required repo settings.
+
 ## LICENSE
 
 See [LICENSE][license].
