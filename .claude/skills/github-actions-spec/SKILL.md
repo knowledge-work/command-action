@@ -32,7 +32,6 @@ Run this loop every time the skill is active:
 2. **Pick the canonical URL(s)** from the catalog below that match the scope.
 
 3. **Fetch with `WebFetch`, framing a _specific_ question.** Do not ask the page to summarize itself — ask the exact question the change raises. Examples:
-
    - "From this page, list every currently supported value for `runs.using` in a JavaScript action and any deprecation note attached to each."
    - "From this page, what is the default permission set for `GITHUB_TOKEN` when `permissions:` is omitted at the workflow and job levels?"
    - "From this README, what is the current signature of `core.getInput`, including all options? Is there a recommended pattern for multiline values?"
@@ -143,7 +142,6 @@ The skeleton is the same for both; the _content of the verdict slot_ differs.
 2. **What the docs say** — the relevant rule from the fetched doc, with a **verbatim quote** when precision matters (`runs.using` values, default permissions, fork-token caps, deprecation language), plus the URL. If a fetched URL did not contain the needed answer, say so and pick a different URL from the catalog rather than guessing.
 
 3. **Verdict** — the actionable answer.
-
    - **For verification tasks**: state whether the change is consistent with the docs, with specific issues called out (wrong field, deprecated command, missing required key, etc.).
    - **For design / proposal tasks**: produce the artifact (diff, full YAML, command list, file paths). The artifact _is_ the verdict — there is no separate "deliverable" section. If the request as stated would produce something incorrect or unsafe, **refuse the literal request and propose the corrected shape**, citing the doc reason (e.g., the fork-PR / `pull_request_target` privilege boundary).
 
