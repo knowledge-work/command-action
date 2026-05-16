@@ -88,8 +88,8 @@ importers:
         specifier: 2.0.5
         version: 2.0.5(@types/node@24.12.4)
       yaml:
-        specifier: 2.5.0
-        version: 2.5.0
+        specifier: 2.9.0
+        version: 2.9.0
       zod:
         specifier: 3.23.8
         version: 3.23.8
@@ -653,48 +653,56 @@ packages:
     engines: {node: ^20.19.0 || >=22.12.0}
     cpu: [arm64]
     os: [linux]
+    libc: [glibc]
 
   '@oxfmt/binding-linux-arm64-musl@0.50.0':
     resolution: {integrity: sha512-rqmvHZm7vMa3NLYa0khwkhReCmp9tqKnF23TFZ7S5cYJLvIE4b0k8famWE7kO897/DXznJe675n5SohFBggbxA==}
     engines: {node: ^20.19.0 || >=22.12.0}
     cpu: [arm64]
     os: [linux]
+    libc: [musl]
 
   '@oxfmt/binding-linux-ppc64-gnu@0.50.0':
     resolution: {integrity: sha512-49bAdYbMSde42tzPDtuHnBWzOgmoS0PT9THCjvMnDVYMQYiHzPc2Mv5rkpBHVQOXM+PHfafJlxgK0anXSWBVvw==}
     engines: {node: ^20.19.0 || >=22.12.0}
     cpu: [ppc64]
     os: [linux]
+    libc: [glibc]
 
   '@oxfmt/binding-linux-riscv64-gnu@0.50.0':
     resolution: {integrity: sha512-VFT25/6kckkIM62KeWB2bi+xCEmC/zC+DcMaIpEfaio8ulkGDLSiTz11TyK0eqgTl3x5OklYEGDWohvAgOr8Bw==}
     engines: {node: ^20.19.0 || >=22.12.0}
     cpu: [riscv64]
     os: [linux]
+    libc: [glibc]
 
   '@oxfmt/binding-linux-riscv64-musl@0.50.0':
     resolution: {integrity: sha512-BBJMuNy6jjkXjUUINF5UTQqb/nvjmtJad43Gp7bab0AAURAdthhJvduR7rHpWInpWYiaMzYsdrmURNcrmpxdZA==}
     engines: {node: ^20.19.0 || >=22.12.0}
     cpu: [riscv64]
     os: [linux]
+    libc: [musl]
 
   '@oxfmt/binding-linux-s390x-gnu@0.50.0':
     resolution: {integrity: sha512-Xd4y+yjAYHKmryXhyUUwbyRD01iKfcvI74iE01L6p4F8SwjhZQXDshK+T8PcrPZLiFqH263P5xqJk94amjkjzQ==}
     engines: {node: ^20.19.0 || >=22.12.0}
     cpu: [s390x]
     os: [linux]
+    libc: [glibc]
 
   '@oxfmt/binding-linux-x64-gnu@0.50.0':
     resolution: {integrity: sha512-Qp96rYJru7l++7mk4R+eh8qq9GFfFAMdmoN6VGoRHI8AA1XMnUIzH4u+zOcKZZwY+irHdsaBldDearwB4nOH7A==}
     engines: {node: ^20.19.0 || >=22.12.0}
     cpu: [x64]
     os: [linux]
+    libc: [glibc]
 
   '@oxfmt/binding-linux-x64-musl@0.50.0':
     resolution: {integrity: sha512-5XLGp+yd5w2Key5LMqJO+X3XVsJKgeeUKljy32+MBF/J/JZ5m8WHl6dI5eOQOr3ixopxPiXIyDAxn3slI3UXiQ==}
     engines: {node: ^20.19.0 || >=22.12.0}
     cpu: [x64]
     os: [linux]
+    libc: [musl]
 
   '@oxfmt/binding-openharmony-arm64@0.50.0':
     resolution: {integrity: sha512-QAxwzh7+GHugCD7WuERolVs8TKQwXNIAZXAHHTecbKVc9oWBkWzOiLauQuezXS57tVcof5zhi1IjZ8tOV0htTg==}
@@ -767,48 +775,56 @@ packages:
     engines: {node: ^20.19.0 || >=22.12.0}
     cpu: [arm64]
     os: [linux]
+    libc: [glibc]
 
   '@oxlint/binding-linux-arm64-musl@1.65.0':
     resolution: {integrity: sha512-IpbA8QGbwFehQhO+YaHwmoI81f93xvywpspf8HrdPCWOIeKwYfM1dhVhO4YKfZewTRRQEPY/JFjTOXTgkwhKrA==}
     engines: {node: ^20.19.0 || >=22.12.0}
     cpu: [arm64]
     os: [linux]
+    libc: [musl]
 
   '@oxlint/binding-linux-ppc64-gnu@1.65.0':
     resolution: {integrity: sha512-ZSe8HgaZdgyHSv2+/pTG68z10+OarB18CkFKQOhRs3lmmP/p2vuigedK2e9d0ztoG2DU/duJzhxXBSjy/492HQ==}
     engines: {node: ^20.19.0 || >=22.12.0}
     cpu: [ppc64]
     os: [linux]
+    libc: [glibc]
 
   '@oxlint/binding-linux-riscv64-gnu@1.65.0':
     resolution: {integrity: sha512-DcTERf++v6HyPHukKAr0JFTRqB+YeDEvqzRgNDMaz7jITPf+tlJIwRxodlAqoXMYhNVEZhXdQM5RAAYH8/oPuw==}
     engines: {node: ^20.19.0 || >=22.12.0}
     cpu: [riscv64]
     os: [linux]
+    libc: [glibc]
 
   '@oxlint/binding-linux-riscv64-musl@1.65.0':
     resolution: {integrity: sha512-xjhMwuFJwRh40NOBzol4gM5gqAa0xPCJU+GQLM6BydV8TbfkIA7JeyCFNhyfbE9Q/5EWcKYTx62R0cRcjP7DAA==}
     engines: {node: ^20.19.0 || >=22.12.0}
     cpu: [riscv64]
     os: [linux]
+    libc: [musl]
 
   '@oxlint/binding-linux-s390x-gnu@1.65.0':
     resolution: {integrity: sha512-lrWSXb8JzboPWYBG6Kunt/eemvjo2oCFXktShsm3yMToY7HjzKLjxh7CljSvGnnZH9oohNFHOKc9xYpGKCPm6w==}
     engines: {node: ^20.19.0 || >=22.12.0}
     cpu: [s390x]
     os: [linux]
+    libc: [glibc]
 
   '@oxlint/binding-linux-x64-gnu@1.65.0':
     resolution: {integrity: sha512-A7xfghw250m4a1sPV+q44Mow2G5bhiC9FBvhAuIhJS6QovWnqzuL5AFQPEuwOB+PM4DhABkqxVa3Iwe3Y/nFlQ==}
     engines: {node: ^20.19.0 || >=22.12.0}
     cpu: [x64]
     os: [linux]
+    libc: [glibc]
 
   '@oxlint/binding-linux-x64-musl@1.65.0':
     resolution: {integrity: sha512-reqOun1+pWO3fW6cv7bsa8hHG0TN3t/82qPdaoJo90FwugXiMjKhZMChmH5Z01cFNRHmxN4+543Fy8478cM/iA==}
     engines: {node: ^20.19.0 || >=22.12.0}
     cpu: [x64]
     os: [linux]
+    libc: [musl]
 
   '@oxlint/binding-openharmony-arm64@1.65.0':
     resolution: {integrity: sha512-KQpqOb/juDBO0xyloDkVDhOVxDUgAfZ2OAAVq99TJScJDzT319xry1QzB9LQohV9QGnA7p6m/XATZkMXc84lwA==}
@@ -870,46 +886,55 @@ packages:
     resolution: {integrity: sha512-pWJsfQjNWNGsoCq53KjMtwdJDmh/6NubwQcz52aEwLEuvx08bzcy6tOUuawAOncPnxz/3siRtd8hiQ32G1y8VA==}
     cpu: [arm]
     os: [linux]
+    libc: [glibc]
 
   '@rollup/rollup-linux-arm-musleabihf@4.21.0':
     resolution: {integrity: sha512-efRIANsz3UHZrnZXuEvxS9LoCOWMGD1rweciD6uJQIx2myN3a8Im1FafZBzh7zk1RJ6oKcR16dU3UPldaKd83w==}
     cpu: [arm]
     os: [linux]
+    libc: [musl]
 
   '@rollup/rollup-linux-arm64-gnu@4.21.0':
     resolution: {integrity: sha512-ZrPhydkTVhyeGTW94WJ8pnl1uroqVHM3j3hjdquwAcWnmivjAwOYjTEAuEDeJvGX7xv3Z9GAvrBkEzCgHq9U1w==}
     cpu: [arm64]
     os: [linux]
+    libc: [glibc]
 
   '@rollup/rollup-linux-arm64-musl@4.21.0':
     resolution: {integrity: sha512-cfaupqd+UEFeURmqNP2eEvXqgbSox/LHOyN9/d2pSdV8xTrjdg3NgOFJCtc1vQ/jEke1qD0IejbBfxleBPHnPw==}
     cpu: [arm64]
     os: [linux]
+    libc: [musl]
 
   '@rollup/rollup-linux-powerpc64le-gnu@4.21.0':
     resolution: {integrity: sha512-ZKPan1/RvAhrUylwBXC9t7B2hXdpb/ufeu22pG2psV7RN8roOfGurEghw1ySmX/CmDDHNTDDjY3lo9hRlgtaHg==}
     cpu: [ppc64]
     os: [linux]
+    libc: [glibc]
 
   '@rollup/rollup-linux-riscv64-gnu@4.21.0':
     resolution: {integrity: sha512-H1eRaCwd5E8eS8leiS+o/NqMdljkcb1d6r2h4fKSsCXQilLKArq6WS7XBLDu80Yz+nMqHVFDquwcVrQmGr28rg==}
     cpu: [riscv64]
     os: [linux]
+    libc: [glibc]
 
   '@rollup/rollup-linux-s390x-gnu@4.21.0':
     resolution: {integrity: sha512-zJ4hA+3b5tu8u7L58CCSI0A9N1vkfwPhWd/puGXwtZlsB5bTkwDNW/+JCU84+3QYmKpLi+XvHdmrlwUwDA6kqw==}
     cpu: [s390x]
     os: [linux]
+    libc: [glibc]
 
   '@rollup/rollup-linux-x64-gnu@4.21.0':
     resolution: {integrity: sha512-e2hrvElFIh6kW/UNBQK/kzqMNY5mO+67YtEh9OA65RM5IJXYTWiXjX6fjIiPaqOkBthYF1EqgiZ6OXKcQsM0hg==}
     cpu: [x64]
     os: [linux]
+    libc: [glibc]
 
   '@rollup/rollup-linux-x64-musl@4.21.0':
     resolution: {integrity: sha512-1vvmgDdUSebVGXWX2lIcgRebqfQSff0hMEkLJyakQ9JQUbLDkEaMsPTLOmyccyC6IJ/l3FZuJbmrBw/u0A0uCQ==}
     cpu: [x64]
     os: [linux]
+    libc: [musl]
 
   '@rollup/rollup-win32-arm64-msvc@4.21.0':
     resolution: {integrity: sha512-s5oFkZ/hFcrlAyBTONFY1TWndfyre1wOMwU+6KCpm/iatybvrRgmZVM+vCFwxmC5ZhdlgfE0N4XorsDpi7/4XQ==}
@@ -1504,6 +1529,7 @@ packages:
   git-raw-commits@4.0.0:
     resolution: {integrity: sha512-ICsMM1Wk8xSGMowkOmPrzo2Fgmfo4bMHLNX6ytHjajRJUqvHOw/TFapQ+QG75c3X/tTDDhOSRPGC52dDbNM8FQ==}
     engines: {node: '>=16'}
+    deprecated: This package is no longer maintained. For the JavaScript API, please use @conventional-changelog/git-client instead.
     hasBin: true
 
   glob-parent@5.1.2:
@@ -2579,6 +2605,7 @@ packages:
 
   uuid@8.3.2:
     resolution: {integrity: sha512-+NYs2QeMWy+GWFOEm9xnn6HCDp0l7QBD7ml8zLUmJ+93Q5NF0NocErnwkTkXVFNiX3/fpC6afS8Dhb/gz7R7eg==}
+    deprecated: uuid@10 and below is no longer supported.  For ESM codebases, update to uuid@latest.  For CommonJS codebases, use uuid@11 (but be aware this version will likely be deprecated in 2028).
     hasBin: true
 
   validate-npm-package-license@3.0.4:
@@ -2680,14 +2707,14 @@ packages:
   yallist@4.0.0:
     resolution: {integrity: sha512-3wdGidZyq5PB084XLES5TpOSRA3wjXAlIWMhum2kRcv/41Sn2emQ0dycQW4uZXLejwKvg6EsvbdlVL+FYEct7A==}
 
-  yaml@2.5.0:
-    resolution: {integrity: sha512-2wWLbGbYDiSqqIKoPjar3MPgB94ErzCtrNE1FdqGuaO0pi2JGjmE8aW8TDZwzU7vuxcGRdL/4gPQwQ7hD5AMSw==}
-    engines: {node: '>= 14'}
-    hasBin: true
-
   yaml@2.7.1:
     resolution: {integrity: sha512-10ULxpnOCQXxJvBgxsn9ptjq6uviG/htZKk9veJGhlqn3w/DxQ631zFF+nlQXLwmImeS5amR2dl2U8sg6U9jsQ==}
     engines: {node: '>= 14'}
+    hasBin: true
+
+  yaml@2.9.0:
+    resolution: {integrity: sha512-2AvhNX3mb8zd6Zy7INTtSpl1F15HW6Wnqj0srWlkKLcpYl/gMIMJiyuGq2KeI2YFxUPjdlB+3Lc10seMLtL4cA==}
+    engines: {node: '>= 14.6'}
     hasBin: true
 
   yargs-parser@20.2.9:
@@ -3988,7 +4015,7 @@ snapshots:
     dependencies:
       debug: 4.3.6
       meow: 11.0.0
-      yaml: 2.5.0
+      yaml: 2.7.1
       zod: 3.23.8
       zod-error: 1.5.0
     transitivePeerDependencies:
@@ -5069,9 +5096,9 @@ snapshots:
 
   yallist@4.0.0: {}
 
-  yaml@2.5.0: {}
-
   yaml@2.7.1: {}
+
+  yaml@2.9.0: {}
 
   yargs-parser@20.2.9: {}
 
