@@ -4,41 +4,53 @@ import { type Inputs, getInputs } from './inputs.js';
 import { parse } from './parse.js';
 import { str2array } from './utils.js';
 
-const validContexts = new Set(['issue', 'pull_request']);
+type CommentKind = 'issue' | 'pull_request' | 'discussion';
 
-const isValidContext = (inputs: Inputs, isPr: boolean) => {
-  if (context.eventName !== 'issue_comment') {
-    core.warning(`This action only supports the "issue_comment" event, but received "${context.eventName}".`);
-    return false;
+const validContexts = new Set<CommentKind>(['issue', 'pull_request', 'discussion']);
+
+type CommentContext = {
+  kind: CommentKind;
+  number: number;
+  commentId: number;
+  actor: string;
+};
+
+const resolveCommentContext = (): CommentContext | null => {
+  if (context.eventName === 'issue_comment') {
+    const isPr = context.payload.issue?.['pull_request'] != null;
+    return {
+      kind: isPr ? 'pull_request' : 'issue',
+      number: context.payload.issue!.number!,
+      commentId: context.payload.comment!.id,
+      actor: context.payload.comment!['user'].login,
+    };
   }
+  if (context.eventName === 'discussion_comment') {
+    const discussion = context.payload['discussion'] as { number: number } | undefined;
+    return {
+      kind: 'discussion',
+      number: discussion!.number,
+      commentId: context.payload.comment!.id,
+      actor: context.payload.comment!['user'].login,
+    };
+  }
+  return null;
+};
 
+const isValidContext = (inputs: Inputs, kind: CommentKind) => {
   const allowedContexts = str2array(inputs.allowed_contexts);
-  const invalidContexts = allowedContexts.filter((c) => !validContexts.has(c));
+  const invalidContexts = allowedContexts.filter((c) => !validContexts.has(c as CommentKind));
   if (invalidContexts.length > 0) {
-    const list = [...validContexts].map((c) => `"${c}"`).join(' and ');
+    const list = [...validContexts].map((c) => `"${c}"`).join(', ');
     core.warning(
       `The "allowed_contexts" must be a comma-separated string of ${list}, but received "${invalidContexts.join(',')}".`,
     );
     return false;
   }
 
-  if (allowedContexts.length === 1) {
-    switch (allowedContexts[0]) {
-      case 'issue': {
-        if (isPr) {
-          core.info(`💡The 'issue' context is not allowed for pull requests.`);
-          return false;
-        }
-        break;
-      }
-      case 'pull_request': {
-        if (!isPr) {
-          core.info(`💡The 'pull_request' context is not allowed for issues.`);
-          return false;
-        }
-        break;
-      }
-    }
+  if (!allowedContexts.includes(kind)) {
+    core.info(`💡The current context "${kind}" is not in allowed_contexts (${allowedContexts.join(',')}).`);
+    return false;
   }
 
   return true;
@@ -48,19 +60,27 @@ export const run = async () => {
   const inputs = getInputs();
   core.debug(`inputs: ${JSON.stringify(inputs)}`);
 
-  const isPr = context?.payload?.issue?.['pull_request'] != null;
-
-  if (!isValidContext(inputs, isPr)) {
+  const ctx = resolveCommentContext();
+  if (ctx === null) {
+    core.warning(
+      `This action only supports the "issue_comment" or "discussion_comment" event, but received "${context.eventName}".`,
+    );
     core.setOutput('continue', 'false');
     return 0;
   }
 
-  const issueNumber = context.payload.issue!.number!;
-  core.setOutput('issue_number', issueNumber);
-  core.setOutput('number', issueNumber);
-  core.setOutput('context', isPr ? 'pull_request' : 'issue');
-  core.setOutput('comment_id', context.payload.comment!.id);
-  core.setOutput('actor', context.payload.comment!['user'].login);
+  if (!isValidContext(inputs, ctx.kind)) {
+    core.setOutput('continue', 'false');
+    return 0;
+  }
+
+  core.setOutput('number', ctx.number);
+  core.setOutput('context', ctx.kind);
+  core.setOutput('comment_id', ctx.commentId);
+  core.setOutput('actor', ctx.actor);
+  if (ctx.kind !== 'discussion') {
+    core.setOutput('issue_number', ctx.number);
+  }
 
   const commands = str2array(inputs.command);
   const body = (context.payload.comment?.['body'] ?? '') as string;

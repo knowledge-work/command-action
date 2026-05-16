@@ -38080,53 +38080,62 @@ const str2array = (input) => input
 
 
 
-const validContexts = new Set(['issue', 'pull_request']);
-const isValidContext = (inputs, isPr) => {
-    if (github_context.eventName !== 'issue_comment') {
-        core/* warning */.$e(`This action only supports the "issue_comment" event, but received "${github_context.eventName}".`);
-        return false;
+const validContexts = new Set(['issue', 'pull_request', 'discussion']);
+const resolveCommentContext = () => {
+    if (github_context.eventName === 'issue_comment') {
+        const isPr = github_context.payload.issue?.['pull_request'] != null;
+        return {
+            kind: isPr ? 'pull_request' : 'issue',
+            number: github_context.payload.issue.number,
+            commentId: github_context.payload.comment.id,
+            actor: github_context.payload.comment['user'].login,
+        };
     }
+    if (github_context.eventName === 'discussion_comment') {
+        const discussion = github_context.payload['discussion'];
+        return {
+            kind: 'discussion',
+            number: discussion.number,
+            commentId: github_context.payload.comment.id,
+            actor: github_context.payload.comment['user'].login,
+        };
+    }
+    return null;
+};
+const isValidContext = (inputs, kind) => {
     const allowedContexts = str2array(inputs.allowed_contexts);
     const invalidContexts = allowedContexts.filter((c) => !validContexts.has(c));
     if (invalidContexts.length > 0) {
-        const list = [...validContexts].map((c) => `"${c}"`).join(' and ');
+        const list = [...validContexts].map((c) => `"${c}"`).join(', ');
         core/* warning */.$e(`The "allowed_contexts" must be a comma-separated string of ${list}, but received "${invalidContexts.join(',')}".`);
         return false;
     }
-    if (allowedContexts.length === 1) {
-        switch (allowedContexts[0]) {
-            case 'issue': {
-                if (isPr) {
-                    core/* info */.pq(`💡The 'issue' context is not allowed for pull requests.`);
-                    return false;
-                }
-                break;
-            }
-            case 'pull_request': {
-                if (!isPr) {
-                    core/* info */.pq(`💡The 'pull_request' context is not allowed for issues.`);
-                    return false;
-                }
-                break;
-            }
-        }
+    if (!allowedContexts.includes(kind)) {
+        core/* info */.pq(`💡The current context "${kind}" is not in allowed_contexts (${allowedContexts.join(',')}).`);
+        return false;
     }
     return true;
 };
 const run = async () => {
     const inputs = getInputs();
     core/* debug */.Yz(`inputs: ${JSON.stringify(inputs)}`);
-    const isPr = github_context?.payload?.issue?.['pull_request'] != null;
-    if (!isValidContext(inputs, isPr)) {
+    const ctx = resolveCommentContext();
+    if (ctx === null) {
+        core/* warning */.$e(`This action only supports the "issue_comment" or "discussion_comment" event, but received "${github_context.eventName}".`);
         core/* setOutput */.uH('continue', 'false');
         return 0;
     }
-    const issueNumber = github_context.payload.issue.number;
-    core/* setOutput */.uH('issue_number', issueNumber);
-    core/* setOutput */.uH('number', issueNumber);
-    core/* setOutput */.uH('context', isPr ? 'pull_request' : 'issue');
-    core/* setOutput */.uH('comment_id', github_context.payload.comment.id);
-    core/* setOutput */.uH('actor', github_context.payload.comment['user'].login);
+    if (!isValidContext(inputs, ctx.kind)) {
+        core/* setOutput */.uH('continue', 'false');
+        return 0;
+    }
+    core/* setOutput */.uH('number', ctx.number);
+    core/* setOutput */.uH('context', ctx.kind);
+    core/* setOutput */.uH('comment_id', ctx.commentId);
+    core/* setOutput */.uH('actor', ctx.actor);
+    if (ctx.kind !== 'discussion') {
+        core/* setOutput */.uH('issue_number', ctx.number);
+    }
     const commands = str2array(inputs.command);
     const body = (github_context.payload.comment?.['body'] ?? '');
     const result = parse_parse(body);

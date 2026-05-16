@@ -10,8 +10,8 @@ inputs:
     description: 'The name of the command to be used in IssueOps, which can be specified as a comma-separated list.'
     required: true
   allowed_contexts:
-    description: 'The comment contexts that trigger the IssueOps command, specified as a comma-separated list.'
-    default: 'issue,pull_request'
+    description: 'The comment contexts that trigger the IssueOps command, specified as a comma-separated list. Allowed values: `"issue"`, `"pull_request"`, `"discussion"`.'
+    default: 'issue,pull_request,discussion'
 
 outputs:
   continue:
@@ -25,9 +25,9 @@ outputs:
   issue_number:
     description: '[Deprecated] The issue number of the comment that triggered this action. Use `number` instead. This output will be removed in the next major release.'
   number:
-    description: 'The number of the issue or pull request that triggered this action.'
+    description: 'The number of the issue, pull request, or discussion that triggered this action.'
   context:
-    description: 'The context that triggered this action. One of `"issue"` or `"pull_request"`.'
+    description: 'The context that triggered this action. One of `"issue"`, `"pull_request"`, or `"discussion"`.'
   command:
     description: 'The command of the triggered IssueOps command.'
 
