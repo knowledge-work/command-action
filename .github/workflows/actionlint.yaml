@@ -28,9 +28,9 @@ jobs:
     steps:
       - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
 
-      # Not using ./.github/actions/setup: actionlint is a standalone binary
-      # and the composite's pnpm install is unnecessary here.
-      - uses: jdx/mise-action@1648a7812b9aeae629881980618f079932869151 # v4.0.1
+      - uses: ./.github/actions/setup
+        with:
+          install: 'false'
 
       - name: Run actionlint
         run: actionlint -color

@@ -1,5 +1,11 @@
 name: setup
-description: Setup mise, node, and pnpm.
+description: Setup mise (node, pnpm, actionlint, ...). Optionally install pnpm dependencies.
+
+inputs:
+  install:
+    description: 'Run `pnpm install --frozen-lockfile` and prime the pnpm store cache. Set to "false" for jobs that only need binaries from mise.'
+    required: false
+    default: 'true'
 
 runs:
   using: composite
@@ -8,10 +14,12 @@ runs:
 
     - name: Get pnpm store directory
       id: pnpm-store
-      run: echo "path=$(pnpm store path)" >> "$GITHUB_OUTPUT"
+      if: inputs.install == 'true'
       shell: bash
+      run: echo "path=$(pnpm store path)" >> "$GITHUB_OUTPUT"
 
     - name: Cache pnpm store
+      if: inputs.install == 'true'
       uses: actions/cache@27d5ce7f107fe9357f9df03efb73ab90386fccae # v5.0.5
       with:
         path: ${{ steps.pnpm-store.outputs.path }}
@@ -19,5 +27,6 @@ runs:
         restore-keys: |
           pnpm-store-${{ runner.os }}-
 
-    - run: pnpm i --frozen-lockfile
+    - if: inputs.install == 'true'
       shell: bash
+      run: pnpm i --frozen-lockfile
