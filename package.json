@@ -10,7 +10,7 @@
     "generate:inputs": "tsx ./scripts/generate-inputs.ts",
     "generate:unicode-regex": "tsx ./scripts/generate-unicode-regex.ts",
     "lint": "oxlint --max-warnings=0",
-    "prepare": "simple-git-hooks",
+    "prepare": "lefthook install",
     "release": "semantic-release",
     "test": "vitest run",
     "test:watch": "vitest watch",
@@ -34,31 +34,18 @@
     "@vercel/ncc": "0.38.1",
     "conventional-changelog-conventionalcommits": "8.0.0",
     "gha-docgen": "1.0.1",
-    "lint-staged": "15.5.2",
+    "lefthook": "2.1.6",
     "oxfmt": "0.50.0",
     "oxlint": "1.65.0",
     "regenerate": "1.4.2",
     "semantic-release": "24.2.0",
     "semantic-release-major-tag": "0.3.2",
-    "simple-git-hooks": "2.11.1",
     "ts-morph": "24.0.0",
     "tsx": "4.19.4",
     "typescript": "5.9.3",
     "vitest": "2.0.5",
     "yaml": "2.5.0",
     "zod": "3.23.8"
-  },
-  "simple-git-hooks": {
-    "pre-commit": "npx lint-staged",
-    "commit-msg": "npx --no -- commitlint --edit ${1}",
-    "preserveUnused": true
-  },
-  "lint-staged": {
-    "*.{js,ts}": [
-      "oxfmt --write",
-      "oxlint --max-warnings=0"
-    ],
-    "*.{md,yaml,json,json5}": "oxfmt --write"
   },
   "commitlint": {
     "extends": [
