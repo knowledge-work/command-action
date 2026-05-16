@@ -28,5 +28,5 @@ outputs:
     description: 'The command of the triggered IssueOps command.'
 
 runs:
-  using: 'node20'
+  using: 'node24'
   main: 'dist/index.js'
