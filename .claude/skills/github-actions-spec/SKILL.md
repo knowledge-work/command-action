@@ -120,13 +120,13 @@ Specific framing keeps the response focused and avoids burning context on unrela
 
 ## Repository context
 
-This repo ships a JavaScript Action (`action.yaml` at the root, `runs.main: dist/index.js`, bundled via `@vercel/ncc`). Check `action.yaml` for the current `runs.using` Node version rather than assuming. Project conventions live in the root `CLAUDE.md` — notably:
+This repo ships a JavaScript Action (`action.yaml` at the root, `runs.main: dist/index.js`, bundled via `@vercel/ncc`). Check `action.yaml` for the current `runs.using` Node version rather than assuming. Project conventions live in the root `AGENTS.md` — notably:
 
 - `dist/` is committed; any source change requires `pnpm build` + commit.
 - `pnpm generate` regenerates docs, inputs (`src/inputs.ts` from `action.yaml`), and the unicode regex; run after manifest or unicode-handling changes.
 - Workflow `uses:` lines are pinned to full commit SHAs.
 
-Cross-check changes against `CLAUDE.md` for repo-specific conventions; cross-check against fetched GitHub Docs for the spec itself.
+Cross-check changes against `AGENTS.md` for repo-specific conventions; cross-check against fetched GitHub Docs for the spec itself.
 
 ## Output expectations
 
@@ -145,6 +145,6 @@ The skeleton is the same for both; the _content of the verdict slot_ differs.
    - **For verification tasks**: state whether the change is consistent with the docs, with specific issues called out (wrong field, deprecated command, missing required key, etc.).
    - **For design / proposal tasks**: produce the artifact (diff, full YAML, command list, file paths). The artifact _is_ the verdict — there is no separate "deliverable" section. If the request as stated would produce something incorrect or unsafe, **refuse the literal request and propose the corrected shape**, citing the doc reason (e.g., the fork-PR / `pull_request_target` privilege boundary).
 
-4. **Adjacent risks** — deprecations, breaking changes, security postures, runtime constraints, or downstream regeneration steps (`pnpm generate:inputs`, `pnpm build`, `dist/` commit, CI parity checks) the user should weigh. Pull these from the repo's `CLAUDE.md` for project conventions, and from the GitHub Changelog / runner releases for fluid spec state. Be specific — name the file or command.
+4. **Adjacent risks** — deprecations, breaking changes, security postures, runtime constraints, or downstream regeneration steps (`pnpm generate:inputs`, `pnpm build`, `dist/` commit, CI parity checks) the user should weigh. Pull these from the repo's `AGENTS.md` for project conventions, and from the GitHub Changelog / runner releases for fluid spec state. Be specific — name the file or command.
 
 Keep it concise. The user does not need a restatement of the entire spec — only the parts that bear on this change.
