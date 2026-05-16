@@ -3,6 +3,8 @@ pre-commit:
   commands:
     code:
       glob: '*.{js,ts}'
+      exclude:
+        - dist/**/*
       run: pnpm exec oxfmt --write {staged_files} && pnpm exec oxlint --max-warnings=0 {staged_files}
       stage_fixed: true
     docs:
