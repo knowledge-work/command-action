@@ -3,3 +3,5 @@ packages:
 allowBuilds:
   esbuild: true
   lefthook: true
+# 7 days in minutes; align with renovate.json5 minimumReleaseAge: '7 days'.
+minimumReleaseAge: 10080
