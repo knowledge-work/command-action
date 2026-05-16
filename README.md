@@ -63,9 +63,13 @@ jobs:
 
       # Only run if `steps.<id>.outputs.continue` is "true".
       # This indicates that `knowledge-work` successfully parsed the command and the subsequent steps should continue.
+      # IssueOps params are passed through `env:` and referenced as shell variables to avoid
+      # GitHub Actions expression injection from attacker-controlled comment content.
       - name: Greet
         if: ${{ steps.command.outputs.continue == 'true' }}
-        run: echo "Hi ${{ fromJSON(steps.command.outputs.params).name }} !"
+        env:
+          NAME: ${{ fromJSON(steps.command.outputs.params).name }}
+        run: echo "Hi $NAME !"
 
       # Add other steps necessary for IssueOps...
 ```
@@ -164,10 +168,10 @@ Supports null in JSON format.
 
 <!-- gha-inputs-start -->
 
-| ID                 | Required           | Default              | Description                                                                                       |
-| :----------------- | :----------------- | :------------------- | :------------------------------------------------------------------------------------------------ |
-| `command`          | :white_check_mark: | n/a                  | The name of the command to be used in IssueOps, which can be specified as a comma-separated list. |
-| `allowed_contexts` |                    | `issue,pull_request` | The comment contexts that trigger the IssueOps command, specified as a comma-separated list.      |
+| ID                 | Required           | Default                         | Description                                                                                                                                               |
+| :----------------- | :----------------- | :------------------------------ | :-------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `command`          | :white_check_mark: | n/a                             | The name of the command to be used in IssueOps, which can be specified as a comma-separated list.                                                         |
+| `allowed_contexts` |                    | `issue,pull_request,discussion` | The comment contexts that trigger the IssueOps command, specified as a comma-separated list. Allowed values: `"issue"`, `"pull_request"`, `"discussion"`. |
 
 <!-- gha-inputs-end -->
 
@@ -182,8 +186,8 @@ Supports null in JSON format.
 | `comment_id`   | The ID of the comment that triggered this action.                                                                                                                                    |
 | `actor`        | The GitHub handle of the actor who executed the IssueOps command.                                                                                                                    |
 | `issue_number` | [Deprecated] The issue number of the comment that triggered this action. Use `number` instead. This output will be removed in the next major release.                                |
-| `number`       | The number of the issue or pull request that triggered this action.                                                                                                                  |
-| `context`      | The context that triggered this action. One of `"issue"` or `"pull_request"`.                                                                                                        |
+| `number`       | The number of the issue, pull request, or discussion that triggered this action.                                                                                                     |
+| `context`      | The context that triggered this action. One of `"issue"`, `"pull_request"`, or `"discussion"`.                                                                                       |
 | `command`      | The command of the triggered IssueOps command.                                                                                                                                       |
 
 <!-- gha-outputs-end -->
@@ -191,6 +195,40 @@ Supports null in JSON format.
 ## :bulb: TIPS
 
 A section introducing tips for implementing IssueOps commands.
+
+### Triggering from GitHub Discussions
+
+`command-action` also handles GitHub Discussions when the workflow is triggered by the `discussion_comment` event. The same parsing logic applies — the only differences are that `outputs.context` becomes `"discussion"` and `outputs.issue_number` is not emitted (use `outputs.number` instead).
+
+```yaml
+name: 'Greet DEMO (Discussions)'
+
+on:
+  discussion_comment:
+    types: [created]
+
+permissions:
+  contents: read
+  discussions: write # only required if your follow-up step writes back to the discussion (e.g. reactions via GraphQL)
+
+jobs:
+  demo:
+    runs-on: ubuntu-latest
+    steps:
+      - id: command
+        uses: knowledge-work/command-action@v1
+        with:
+          command: 'greet'
+      - if: ${{ steps.command.outputs.continue == 'true' }}
+        env:
+          NAME: ${{ fromJSON(steps.command.outputs.params).name }}
+        run: echo "Hi $NAME !"
+```
+
+> [!warning]
+> Discussion / Issue / PR comments are attacker-controlled. Pass IssueOps params via `env:` and reference them as shell variables (`"$NAME"`) instead of interpolating `${{ ... }}` directly into a `run:` script. See [GitHub Actions security hardening](https://docs.github.com/en/actions/security-guides/security-hardening-for-github-actions#using-an-intermediate-environment-variable) for details.
+
+To restrict the action to discussions only (or to issues / pull requests only), use the [`allowed_contexts`](#inbox_tray-inputs) input — for example `allowed_contexts: 'discussion'`.
 
 ### Reacting to the comment
 

@@ -92,4 +92,78 @@ test('invalid context emits only continue=false and never emits number / context
   expect(outputFor('number')).toBeUndefined();
   expect(outputFor('context')).toBeUndefined();
   expect(outputFor('issue_number')).toBeUndefined();
+  expect(mocks.warning).toHaveBeenCalled();
+  const warningMessage = mocks.warning.mock.calls[0]?.[0] as string;
+  expect(warningMessage).toContain('issue_comment');
+  expect(warningMessage).toContain('discussion_comment');
+});
+
+test('discussion context emits number and context="discussion" without issue_number', async () => {
+  mocks.inputs['allowed_contexts'] = 'issue,pull_request,discussion';
+  mocks.context.eventName = 'discussion_comment';
+  mocks.context.payload = {
+    discussion: { number: 7 },
+    comment: { id: 4004, body: '.foo', user: { login: 'carol' } },
+  };
+
+  await run();
+
+  expect(outputFor('number')).toBe(7);
+  expect(outputFor('context')).toBe('discussion');
+  expect(outputFor('comment_id')).toBe(4004);
+  expect(outputFor('actor')).toBe('carol');
+  expect(outputFor('issue_number')).toBeUndefined();
+  expect(outputFor('continue')).toBe('true');
+});
+
+test('allowed_contexts="issue" rejects a discussion_comment via the filter', async () => {
+  mocks.inputs['allowed_contexts'] = 'issue';
+  mocks.context.eventName = 'discussion_comment';
+  mocks.context.payload = {
+    discussion: { number: 7 },
+    comment: { id: 4004, body: '.foo', user: { login: 'carol' } },
+  };
+
+  await run();
+
+  expect(outputFor('continue')).toBe('false');
+  expect(outputFor('number')).toBeUndefined();
+  expect(outputFor('context')).toBeUndefined();
+  expect(outputFor('issue_number')).toBeUndefined();
+  expect(mocks.info).toHaveBeenCalled();
+});
+
+test('allowed_contexts="discussion" accepts a discussion_comment (single-context positive)', async () => {
+  mocks.inputs['allowed_contexts'] = 'discussion';
+  mocks.context.eventName = 'discussion_comment';
+  mocks.context.payload = {
+    discussion: { number: 7 },
+    comment: { id: 4004, body: '.foo', user: { login: 'carol' } },
+  };
+
+  await run();
+
+  expect(outputFor('number')).toBe(7);
+  expect(outputFor('context')).toBe('discussion');
+  expect(outputFor('issue_number')).toBeUndefined();
+  expect(outputFor('continue')).toBe('true');
+  const rejectionInfoCalls = mocks.info.mock.calls.filter(([msg]) =>
+    typeof msg === 'string' ? msg.includes('not in allowed_contexts') : false,
+  );
+  expect(rejectionInfoCalls).toHaveLength(0);
+});
+
+test('allowed_contexts="discussion" rejects an issue_comment (heterogeneous single-context)', async () => {
+  mocks.inputs['allowed_contexts'] = 'discussion';
+  mocks.context.eventName = 'issue_comment';
+  mocks.context.payload = {
+    issue: { number: 42 },
+    comment: { id: 1001, body: '.foo', user: { login: 'alice' } },
+  };
+
+  await run();
+
+  expect(outputFor('continue')).toBe('false');
+  expect(outputFor('context')).toBeUndefined();
+  expect(outputFor('number')).toBeUndefined();
 });
