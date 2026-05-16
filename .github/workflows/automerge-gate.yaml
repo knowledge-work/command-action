@@ -1,0 +1,37 @@
+name: automerge-gate
+
+on:
+  pull_request:
+    types:
+      - opened
+      - synchronize
+      - reopened
+      - auto_merge_enabled
+  pull_request_review:
+    types:
+      - submitted
+
+permissions:
+  contents: read
+  checks: read
+  actions: read
+  pull-requests: read
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  all-passed:
+    if: >-
+      github.event_name != 'pull_request_review' ||
+      github.event.review.state == 'approved'
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: pkgdeps/automerge-gate@1b731ae7137b3b0c37c09bd40df73b2a34a5abaa # v4.1.0
+        with:
+          gate-mode: 'public'
+          ignore-checks: |
+            dogfood
+            publish
