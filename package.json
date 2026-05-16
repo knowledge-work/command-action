@@ -33,7 +33,7 @@
     "@unicode/unicode-15.0.0": "1.6.5",
     "@vercel/ncc": "0.38.1",
     "conventional-changelog-conventionalcommits": "8.0.0",
-    "gha-docgen": "1.0.1",
+    "gha-docgen": "2.0.0",
     "lefthook": "2.1.6",
     "oxfmt": "0.50.0",
     "oxlint": "1.65.0",
