@@ -7,6 +7,8 @@ pre-commit:
       stage_fixed: true
     docs:
       glob: '*.{md,yaml,yml,json,json5}'
+      exclude:
+        - pnpm-lock.yaml
       run: pnpm exec oxfmt --write {staged_files}
       stage_fixed: true
 
