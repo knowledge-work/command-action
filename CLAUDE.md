@@ -7,8 +7,8 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 - Setup: `mise install && pnpm i`
 - Build: `pnpm build` (bundles into dist/ via @vercel/ncc)
 - Test: `pnpm test` (vitest), single file: `pnpm vitest run src/<file>.test.ts`
-- Lint: `pnpm lint`
-- Format: `pnpm format` (eslint --fix + prettier)
+- Lint: `pnpm lint` (oxlint). Auto-fix: `pnpm lint --fix`
+- Format: `pnpm format` (oxfmt)
 - Typecheck: `pnpm typecheck`
 - Generate: `pnpm generate` (docs, inputs, unicode-regex + format)
 
@@ -28,7 +28,7 @@ After changes:
 - Use parjs (parser combinator library) for parsing logic, not regex
 - ESM modules (`"type": "module"`)
 - Conventional commits enforced via commitlint
-- Prettier: 120 char width, single quotes, trailing commas
+- Formatter: oxfmt — 120 char width, single quotes, trailing commas
 
 ## Language
 

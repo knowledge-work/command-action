@@ -1,12 +1,12 @@
 import { unicodeIdContinueReg, unicodeIdStartReg } from './unicode-regex.js';
 
 /** @see https://github.com/GregRos/parjs/issues/59 */
-/* eslint-disable @typescript-eslint/no-require-imports, @typescript-eslint/consistent-type-imports */
+/* oxlint-disable typescript/consistent-type-imports */
 const { rest, anyCharOf, string, stringLen, noCharOf, anyStringOf, regexp, float, whitespace, eof } =
   require('parjs') as typeof import('parjs');
 const { map, qthen, or, many, between, then, thenq, manySepBy, stringify } =
   require('parjs/combinators') as typeof import('parjs/combinators');
-/* eslint-enable @typescript-eslint/no-require-imports, @typescript-eslint/consistent-type-imports */
+/* oxlint-enable typescript/consistent-type-imports */
 
 // String
 const escapes: Record<string, string> = {
