@@ -1,0 +1,36 @@
+name: Lint GitHub Actions
+
+on:
+  pull_request:
+    types:
+      - synchronize
+      - opened
+      - reopened
+    paths:
+      - '.github/**'
+  push:
+    branches:
+      - main
+      - 'releases/*'
+    paths:
+      - '.github/**'
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
+
+jobs:
+  actionlint:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+
+      # Not using ./.github/actions/setup: actionlint is a standalone binary
+      # and the composite's pnpm install is unnecessary here.
+      - uses: jdx/mise-action@1648a7812b9aeae629881980618f079932869151 # v4.0.1
+
+      - name: Run actionlint
+        run: actionlint -color
