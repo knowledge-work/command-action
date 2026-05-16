@@ -1,0 +1,61 @@
+name: E2E (self-dogfood)
+
+on:
+  issue_comment:
+    types: [created, edited]
+  discussion_comment:
+    types: [created, edited]
+  pull_request:
+    types: [opened, synchronize, reopened]
+  push:
+    branches:
+      - main
+
+permissions:
+  contents: read
+
+concurrency:
+  group: e2e-${{ github.event.comment.id || github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  registered:
+    if: github.event_name == 'pull_request' || github.event_name == 'push'
+    runs-on: ubuntu-latest
+    steps:
+      - run: echo "E2E workflow is registered. Real dogfood runs only on issue_comment / discussion_comment."
+
+  dogfood:
+    if: |
+      (github.event_name == 'issue_comment' || github.event_name == 'discussion_comment') &&
+      startsWith(github.event.comment.body, '.')
+    runs-on: ubuntu-latest
+    environment: e2e
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+
+      - uses: ./.github/actions/setup
+
+      - run: pnpm build
+
+      - id: command
+        uses: ./
+        continue-on-error: true
+        with:
+          command: test
+          allowed_contexts: issue,pull_request,discussion
+
+      - name: Verify
+        env:
+          ACTUAL_OUTCOME: ${{ steps.command.outcome }}
+          ACTUAL_CONTINUE: ${{ steps.command.outputs.continue }}
+          ACTUAL_COMMAND: ${{ steps.command.outputs.command }}
+          ACTUAL_PARAMS: ${{ steps.command.outputs.params }}
+          ACTUAL_NUMBER: ${{ steps.command.outputs.number }}
+          ACTUAL_CONTEXT: ${{ steps.command.outputs.context }}
+          ACTUAL_ISSUE_NUMBER: ${{ steps.command.outputs.issue_number }}
+          ACTUAL_COMMENT_ID: ${{ steps.command.outputs.comment_id }}
+          ACTUAL_ACTOR: ${{ steps.command.outputs.actor }}
+        run: pnpm tsx scripts/e2e-verify.ts
