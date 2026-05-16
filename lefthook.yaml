@@ -1,0 +1,16 @@
+pre-commit:
+  parallel: true
+  commands:
+    code:
+      glob: '*.{js,ts}'
+      run: pnpm exec oxfmt --write {staged_files} && pnpm exec oxlint --max-warnings=0 {staged_files}
+      stage_fixed: true
+    docs:
+      glob: '*.{md,yaml,yml,json,json5}'
+      run: pnpm exec oxfmt --write {staged_files}
+      stage_fixed: true
+
+commit-msg:
+  commands:
+    commitlint:
+      run: pnpm exec commitlint --edit {1}
