@@ -28,7 +28,7 @@
     "@semantic-release/github": "10.3.5",
     "@semantic-release/release-notes-generator": "14.0.1",
     "@tsconfig/node24": "24.0.4",
-    "@tsconfig/strictest": "2.0.5",
+    "@tsconfig/strictest": "2.0.8",
     "@types/node": "24.12.4",
     "@unicode/unicode-15.0.0": "1.6.5",
     "@vercel/ncc": "0.38.1",
