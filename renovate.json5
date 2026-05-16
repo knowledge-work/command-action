@@ -1,0 +1,38 @@
+{
+  $schema: 'https://docs.renovatebot.com/renovate-schema.json',
+
+  extends: [
+    'config:js-lib',
+    'group:typescript-eslintMonorepo',
+    'group:commitlintMonorepo',
+    ':semanticCommits',
+    ':semanticCommitTypeAll(chore)',
+    ':semanticCommitScopeDisabled',
+  ],
+
+  labels: ['A-dependencies'],
+  rebaseLabel: 'S-needs-rebase',
+
+  // Wait 7 days after a release before opening a PR.
+  // Applies uniformly to all update types (major / minor / patch).
+  minimumReleaseAge: '7 days',
+
+  prConcurrentLimit: 0,
+
+  // Major updates intentionally have no grouping rule, so each lands as its own PR.
+  packageRules: [
+    // Group all non-major npm updates into a single PR.
+    {
+      matchManagers: ['npm'],
+      matchUpdateTypes: ['minor', 'patch'],
+      groupName: 'all non-major dependencies',
+    },
+    // Group all non-major GitHub Actions updates into a single PR.
+    // pin/digest are grouped here since Actions are pinned to full commit SHAs (frequent churn).
+    {
+      matchManagers: ['github-actions'],
+      matchUpdateTypes: ['minor', 'patch', 'digest', 'pin'],
+      groupName: 'github-actions (non-major)',
+    },
+  ],
+}

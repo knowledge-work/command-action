@@ -58,7 +58,7 @@
       "oxfmt --write",
       "oxlint --max-warnings=0"
     ],
-    "*.{md,yaml,json}": "oxfmt --write"
+    "*.{md,yaml,json,json5}": "oxfmt --write"
   },
   "commitlint": {
     "extends": [
