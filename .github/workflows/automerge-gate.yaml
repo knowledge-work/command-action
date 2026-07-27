@@ -29,9 +29,11 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 10
     steps:
-      - uses: pkgdeps/automerge-gate@1b731ae7137b3b0c37c09bd40df73b2a34a5abaa # v4.1.0
+      - uses: pkgdeps/automerge-gate@fe5d7cd2fc17778dc42f6916f9d9990cb259ad01 # v5.0.0
         with:
           gate-mode: 'public'
           ignore-checks: |
-            dogfood
-            publish
+            [
+              { "name": "dogfood" },
+              { "name": "publish" }
+            ]
