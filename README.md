@@ -5,7 +5,6 @@
 <!-- gha-description-start -->
 
 IssueOps commands in GitHub Actions.
-
 <!-- gha-description-end -->
 
 [![Build][badge-build]][build]
