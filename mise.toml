@@ -2,4 +2,4 @@
 actionlint = "1.7.12"
 node = "24.18.0"
 pnpm = "11.15.1"
-zizmor = "1.27.0"
+zizmor = "1.28.0"
