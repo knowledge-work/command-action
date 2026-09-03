@@ -43,8 +43,8 @@ importers:
         specifier: 24.13.3
         version: 24.13.3
       '@unicode/unicode-15.0.0':
-        specifier: 1.6.17
-        version: 1.6.17
+        specifier: 2.0.2
+        version: 2.0.2
       '@vercel/ncc':
         specifier: 0.44.1
         version: 0.44.1
@@ -886,8 +886,8 @@ packages:
   '@types/semver@7.5.8':
     resolution: {integrity: sha512-I8EUhyrgfLrcTkzV3TSsGyl1tSuPrEDzr0yd5m90UgNxQkyDXULk3b6MlQqTCpZpNtWe1K0hzclnZkTcLBe2UQ==}
 
-  '@unicode/unicode-15.0.0@1.6.17':
-    resolution: {integrity: sha512-sVPtqhNRrf7cbyEtU1H7y4JHAa5rIP+JNnicVtypjDBAh/THgfR4nvga9ZE5OeUHBzsBtKrLEOvyks9dx21rMQ==}
+  '@unicode/unicode-15.0.0@2.0.2':
+    resolution: {integrity: sha512-FS0LaEcm22GZAqWW/ybOKSjvHNmyA6RH3z7g8t1DsuI2WxjkAIhXDad9PsEvJL5PYlBDE99ci1A9fHUn33jZCg==}
 
   '@vercel/ncc@0.44.1':
     resolution: {integrity: sha512-cUjIE5P2YY1n+Kt9rFIazMMpGoPn1Fic04rOmTkElMkiDP5oszGfERMpo2shVkFKDL7rVppdM2pqJKC59shQWQ==}
@@ -3078,7 +3078,7 @@ snapshots:
 
   '@types/semver@7.5.8': {}
 
-  '@unicode/unicode-15.0.0@1.6.17': {}
+  '@unicode/unicode-15.0.0@2.0.2': {}
 
   '@vercel/ncc@0.44.1': {}
 
