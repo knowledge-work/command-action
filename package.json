@@ -30,7 +30,7 @@
     "@tsconfig/node24": "24.0.4",
     "@tsconfig/strictest": "2.0.8",
     "@types/node": "24.13.3",
-    "@unicode/unicode-15.0.0": "1.6.17",
+    "@unicode/unicode-15.0.0": "2.0.2",
     "@vercel/ncc": "0.44.1",
     "conventional-changelog-conventionalcommits": "9.3.1",
     "gha-docgen": "2.0.0",
