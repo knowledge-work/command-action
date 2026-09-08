@@ -32,7 +32,7 @@
     "@types/node": "24.13.3",
     "@unicode/unicode-15.0.0": "1.6.17",
     "@vercel/ncc": "0.44.1",
-    "conventional-changelog-conventionalcommits": "9.3.1",
+    "conventional-changelog-conventionalcommits": "10.4.0",
     "gha-docgen": "2.0.0",
     "lefthook": "2.1.10",
     "oxfmt": "0.59.0",
