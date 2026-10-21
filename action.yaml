@@ -12,16 +12,21 @@ inputs:
   allowed_contexts:
     description: 'The comment contexts that trigger the IssueOps command, specified as a comma-separated list. Allowed values: `"issue"`, `"pull_request"`, `"discussion"`.'
     default: 'issue,pull_request,discussion'
+  allowed_permissions:
+    description: 'Restricts the command to event senders whose repository role is in this comma-separated list, looked up with `github_token`. Allowed values: `"admin"`, `"maintain"`, `"write"`, `"triage"`, `"read"`. When unset, no permission check is performed. On a public repository, `"read"` lets any GitHub user through.'
+  github_token:
+    description: 'The token used to look up the repository role of the event sender when `allowed_permissions` is set.'
+    default: '${{ github.token }}'
 
 outputs:
   continue:
-    description: 'Indicates whether the IssueOps command was triggered and the workflow should continue with the string `"true"`. If the action did not complete successfully, `"false"` will be used.'
+    description: 'The string `"true"` when the comment contains an allowed IssueOps command (and, if `allowed_permissions` is set, the actor holds one of those permissions); otherwise `"false"`. Without `allowed_permissions` this is a syntax check only and does not authorize the commenter.'
   params:
     description: 'The parameters of the triggered IssueOps command, provided as a JSON string.'
   comment_id:
     description: 'The ID of the comment that triggered this action.'
   actor:
-    description: 'The GitHub handle of the actor who executed the IssueOps command.'
+    description: 'The GitHub handle of the user who triggered the event (the event sender). On an edited comment this is the editor, not the original author.'
   issue_number:
     description: '[Deprecated] The issue number of the comment that triggered this action. Use `number` instead. This output will be removed in the next major release.'
   number:
