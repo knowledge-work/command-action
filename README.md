@@ -30,7 +30,7 @@ Specify the command name to be executed as IssueOps in the `command` option.
 
 ```yaml
 - id: command
-  uses: knowledge-work/command-action@v2
+  uses: knowledge-work/command-action@<commit-sha> # <version>
   with:
     command: 'preview'
 ```
@@ -41,8 +41,8 @@ Subscribe the workflow to `issue_comment` with `types: [created]`, as in the exa
 
 Refer to [Inputs](#inbox_tray-inputs) for other options, and to [Restricting who can run a command](#restricting-who-can-run-a-command) before running anything privileged.
 
-> [!tip]
-> For production workflows, pin the action to a full commit SHA (`knowledge-work/command-action@<sha> # v2.x.y`) instead of the floating `v2` tag.
+> [!important]
+> Replace `<commit-sha>` and `<version>` with the full commit SHA and the version of a release listed on the [Releases](https://github.com/knowledge-work/command-action/releases) page. The floating major tags are no longer updated: `v1` stays at v1.1.1 and `v2` at v2.4.0.
 
 ### Example
 
@@ -61,7 +61,7 @@ jobs:
     steps:
       # Set up the ".greet" command.
       - id: command
-        uses: knowledge-work/command-action@v2
+        uses: knowledge-work/command-action@<commit-sha> # <version>
         with:
           command: 'greet'
 
@@ -208,7 +208,7 @@ A section introducing tips for implementing IssueOps commands.
 
 ```yaml
 - id: command
-  uses: knowledge-work/command-action@v2
+  uses: knowledge-work/command-action@<commit-sha> # <version>
   with:
     command: 'deploy'
     allowed_permissions: 'write,maintain,admin'
@@ -243,7 +243,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - id: command
-        uses: knowledge-work/command-action@v2
+        uses: knowledge-work/command-action@<commit-sha> # <version>
         with:
           command: 'greet'
       - if: ${{ steps.command.outputs.continue == 'true' }}
@@ -267,7 +267,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - id: command
-        uses: knowledge-work/command-action@v2
+        uses: knowledge-work/command-action@<commit-sha> # <version>
         with:
           command: 'greet'
 

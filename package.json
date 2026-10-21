@@ -39,7 +39,6 @@
     "regenerate": "1.5.0",
     "rollup-plugin-license": "3.7.1",
     "semantic-release": "25.0.9",
-    "semantic-release-major-tag": "0.3.2",
     "ts-morph": "28.0.0",
     "tsdown": "0.23.1",
     "tsx": "4.23.15",
@@ -66,8 +65,7 @@
         }
       ],
       "@semantic-release/release-notes-generator",
-      "@semantic-release/github",
-      "semantic-release-major-tag"
+      "@semantic-release/github"
     ]
   }
 }
