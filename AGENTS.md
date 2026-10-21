@@ -36,12 +36,13 @@ This file provides guidance to AI coding agents (Claude Code, Codex CLI, etc.) w
 
 CI fails if `dist/` or any generated file drifts from source. Always commit the regenerated output alongside the change.
 
-| You changed...                       | Re-run                        | Commit these too                      |
-| ------------------------------------ | ----------------------------- | ------------------------------------- |
-| Any non-generated file in `src/`     | `pnpm build`                  | `dist/`                               |
-| `action.yaml` inputs / outputs       | `pnpm generate`               | `dist/`, `src/inputs.ts`, `README.md` |
-| Unicode-handling logic               | `pnpm generate:unicode-regex` | `src/unicode-regex.ts`                |
-| Docs in `action.yaml` (descriptions) | `pnpm generate:docs`          | `README.md`                           |
+| You changed...                                                                             | Re-run                                         | Commit these too                      |
+| ------------------------------------------------------------------------------------------ | ---------------------------------------------- | ------------------------------------- |
+| Any non-generated file in `src/`                                                           | `pnpm build`                                   | `dist/`                               |
+| `action.yaml` inputs / outputs                                                             | `pnpm generate`                                | `dist/`, `src/inputs.ts`, `README.md` |
+| Unicode-handling logic                                                                     | `pnpm generate:unicode-regex`                  | `src/unicode-regex.ts`                |
+| Docs in `action.yaml` (descriptions)                                                       | `pnpm generate:docs`                           | `README.md`                           |
+| Tool versions in `mise.toml`, or the mise `version` in `.github/actions/setup/action.yaml` | `mise lock`, run with that pinned mise version | `mise.lock`                           |
 
 ## Code style
 
