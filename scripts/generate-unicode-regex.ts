@@ -1,20 +1,20 @@
 import fs from 'fs';
-import { createRequire } from 'module';
 import path from 'path';
 import { fileURLToPath } from 'url';
 import regenerate from 'regenerate';
 
-const require = createRequire(import.meta.url);
-
 const VERSION = '15.0.0';
 const DEST = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..', 'src', 'unicode-regex.ts');
 
+const codePoints = async (property: string): Promise<number[]> =>
+  (await import(`@unicode/unicode-${VERSION}/Binary_Property/${property}/code-points.mjs`)).default;
+
 const idStart = regenerate()
-  .add(require(`@unicode/unicode-${VERSION}/Binary_Property/ID_Start/code-points.js`))
+  .add(await codePoints('ID_Start'))
   .toRegExp();
 
 const idContinue = regenerate()
-  .add(require(`@unicode/unicode-${VERSION}/Binary_Property/ID_Continue/code-points.js`))
+  .add(await codePoints('ID_Continue'))
   .toRegExp();
 
 fs.writeFileSync(
