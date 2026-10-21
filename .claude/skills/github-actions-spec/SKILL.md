@@ -120,7 +120,7 @@ Specific framing keeps the response focused and avoids burning context on unrela
 
 ## Repository context
 
-This repo ships a JavaScript Action (`action.yaml` at the root, `runs.main: dist/index.js`, bundled via `@vercel/ncc`). Check `action.yaml` for the current `runs.using` Node version rather than assuming. Project conventions live in the root `AGENTS.md` — notably:
+This repo ships a JavaScript Action (`action.yaml` at the root, `runs.main: dist/index.js`, bundled via `tsdown`). Check `action.yaml` for the current `runs.using` Node version rather than assuming. Project conventions live in the root `AGENTS.md` — notably:
 
 - `dist/` is committed; any source change requires `pnpm build` + commit.
 - `pnpm generate` regenerates docs, inputs (`src/inputs.ts` from `action.yaml`), and the unicode regex; run after manifest or unicode-handling changes.

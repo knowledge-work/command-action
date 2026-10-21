@@ -6,7 +6,8 @@ This file provides guidance to AI coding agents (Claude Code, Codex CLI, etc.) w
 
 `IssueOps Command Action` — a JavaScript GitHub Action that parses `.command key=value, ...` comments on issues / PRs and emits structured outputs (`continue`, `params`, `command`, `actor`, `comment_id`, `issue_number`). See `action.yaml` for the full I/O contract.
 
-- Entrypoint: `src/index.ts` → bundled to `dist/index.js` via `@vercel/ncc`. `src/index.ts` is the thin runner that calls `run` from `src/main.ts`; keep `src/main.ts` side-effect-free for testability.
+- Entrypoint: `src/index.ts` → bundled to `dist/index.js` via `tsdown` (config in `tsdown.config.ts`; every dependency is inlined and `dist/licenses.txt` lists their licenses). `src/index.ts` is the thin runner that calls `run` from `src/main.ts`; keep `src/main.ts` side-effect-free for testability.
+- `dist/index.js` is ESM and has no `package.json` next to it: Node loads it as ESM because of `"type": "module"` in the root `package.json`. Changing that field to `"commonjs"` breaks the action.
 - Runtime: Node 24 (`runs.using: node24` in `action.yaml`)
 - Core parser: `src/parse.ts`, built on `parjs` combinators
 
@@ -24,7 +25,7 @@ This file provides guidance to AI coding agents (Claude Code, Codex CLI, etc.) w
 ## Development
 
 - Setup: `mise install && pnpm i`
-- Build: `pnpm build` (bundles to `dist/` via `@vercel/ncc`)
+- Build: `pnpm build` (bundles to `dist/` via `tsdown`)
 - Test: `pnpm test` (vitest). Single file: `pnpm vitest run src/<file>.test.ts`
 - Lint: `pnpm lint` (oxlint, config in `.oxlintrc.json`)
 - Format: `pnpm format` / `pnpm format:check` (oxfmt, config in `.oxfmtrc.json`)
