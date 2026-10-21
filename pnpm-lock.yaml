@@ -69,9 +69,6 @@ importers:
       semantic-release:
         specifier: 25.0.9
         version: 25.0.9(supports-color@7.2.0)(typescript@7.0.2)
-      semantic-release-major-tag:
-        specifier: 0.3.2
-        version: 0.3.2
       ts-morph:
         specifier: 28.0.0
         version: 28.0.0
@@ -2426,10 +2423,6 @@ packages:
 
   safe-buffer@5.1.2:
     resolution: {integrity: sha512-Gd2UZBJDkXlY7GbJxfsE8/nvKkUEU1G38c1siN6QP6a9PT9MmHB8GnpscSmMJSoF8LOIrt8ud/wPtojys4G6+g==}
-
-  semantic-release-major-tag@0.3.2:
-    resolution: {integrity: sha512-XTB3mVG6D6oPHSW/zhWC3eSoBRiLqZjKtjTc90wcLzS0DG00UORnn7CceDGdYc5dIl0BG91eO873HvECimyE+Q==}
-    engines: {node: '>=14'}
 
   semantic-release@25.0.9:
     resolution: {integrity: sha512-bxve7csK0/Txr++CkfrmV+X1r4jqiSOw2WsSad9E2S68R+ZfLBwDn8IceM8WfiOmKQIHgsQc1cNA8Dzg7U75pg==}
@@ -4813,8 +4806,6 @@ snapshots:
       fsevents: 2.3.3
 
   safe-buffer@5.1.2: {}
-
-  semantic-release-major-tag@0.3.2: {}
 
   semantic-release@25.0.9(supports-color@7.2.0)(typescript@7.0.2):
     dependencies:

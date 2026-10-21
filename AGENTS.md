@@ -58,7 +58,7 @@ CI fails if `dist/` or any generated file drifts from source. Always commit the 
   - `fix(main): handle missing comment body`
   - `chore(deps): bump parjs to 1.3.10`
 - Pre-commit hook runs `lint-staged` (`oxfmt --write` + `oxlint` on staged `*.{js,ts}`)
-- Releases are automated via `semantic-release` on push to `main`
+- Releases are automated via `semantic-release` on push to `main`. Only `vX.Y.Z` tags are created: the floating major tags (`v1`, `v2`) are frozen, and a tag ruleset blocks updating or deleting any `v*` tag
 
 ## GitHub Actions conventions
 
