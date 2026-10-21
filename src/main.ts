@@ -1,5 +1,5 @@
 import * as core from '@actions/core';
-import { context } from '@actions/github';
+import { context, getOctokit } from '@actions/github';
 import { type Inputs, getInputs } from './inputs.js';
 import { parse } from './parse.js';
 import { str2array } from './utils.js';
@@ -15,6 +15,8 @@ type CommentContext = {
   actor: string;
 };
 
+// The actor is the event sender: on `edited` / `deleted` events `comment.user` is still the
+// original author, so reporting it would attribute another user's edit to them.
 const resolveCommentContext = (): CommentContext | null => {
   if (context.eventName === 'issue_comment') {
     const isPr = context.payload.issue?.['pull_request'] != null;
@@ -22,7 +24,7 @@ const resolveCommentContext = (): CommentContext | null => {
       kind: isPr ? 'pull_request' : 'issue',
       number: context.payload.issue!.number!,
       commentId: context.payload.comment!.id,
-      actor: context.payload.comment!['user'].login,
+      actor: context.payload.sender!['login'] as string,
     };
   }
   if (context.eventName === 'discussion_comment') {
@@ -31,7 +33,7 @@ const resolveCommentContext = (): CommentContext | null => {
       kind: 'discussion',
       number: discussion!.number,
       commentId: context.payload.comment!.id,
-      actor: context.payload.comment!['user'].login,
+      actor: context.payload.sender!['login'] as string,
     };
   }
   return null;
@@ -56,9 +58,55 @@ const isValidContext = (inputs: Inputs, kind: CommentKind) => {
   return true;
 };
 
+const validPermissions = new Set(['admin', 'maintain', 'write', 'triage', 'read']);
+
+const hasAllowedPermission = async (inputs: Inputs, actor: string) => {
+  if (inputs.allowed_permissions === null) {
+    return true;
+  }
+
+  const allowedPermissions = str2array(inputs.allowed_permissions);
+  const invalidPermissions = allowedPermissions.filter((p) => !validPermissions.has(p));
+  if (invalidPermissions.length > 0) {
+    const list = [...validPermissions].map((p) => `"${p}"`).join(', ');
+    core.warning(
+      `The "allowed_permissions" must be a comma-separated string of ${list}, but received "${invalidPermissions.join(',')}".`,
+    );
+    return false;
+  }
+  if (allowedPermissions.includes('read')) {
+    core.warning('The "allowed_permissions" includes "read", which every GitHub user has on a public repository.');
+  }
+
+  let role: string;
+  try {
+    const { data } = await getOctokit(inputs.github_token).rest.repos.getCollaboratorPermissionLevel({
+      ...context.repo,
+      username: actor,
+    });
+    role = data.role_name;
+  } catch (e) {
+    core.warning(
+      `Failed to look up the repository permission of "${actor}", so the trigger has been canceled. ${e instanceof Error ? e.message : String(e)}`,
+    );
+    return false;
+  }
+
+  if (!allowedPermissions.includes(role)) {
+    core.info(
+      `💡"${actor}" has the "${role}" permission, which is not in allowed_permissions (${allowedPermissions.join(',')}).`,
+    );
+    return false;
+  }
+
+  return true;
+};
+
 export const run = async () => {
   const inputs = getInputs();
-  core.debug(`inputs: ${JSON.stringify(inputs)}`);
+  core.debug(
+    `inputs: ${JSON.stringify(inputs, (key, value: unknown) => (key === 'github_token' ? undefined : value))}`,
+  );
 
   const ctx = resolveCommentContext();
   if (ctx === null) {
@@ -107,12 +155,20 @@ export const run = async () => {
     return 0;
   }
 
+  if (context.payload.action === 'deleted') {
+    core.setOutput('continue', 'false');
+    core.info(`The "${result.command}" command was found in a deleted comment, so the trigger has been canceled.`);
+    return 0;
+  }
+
+  if (!(await hasAllowedPermission(inputs, ctx.actor))) {
+    core.setOutput('continue', 'false');
+    return 0;
+  }
+
   core.setOutput('continue', 'true');
   core.setOutput('command', result.command);
   core.setOutput('params', JSON.stringify(result.params));
-
-  core.info('params:');
-  core.info(JSON.stringify(result.params, null, 2));
 
   return 0;
 };

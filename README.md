@@ -30,14 +30,19 @@ Specify the command name to be executed as IssueOps in the `command` option.
 
 ```yaml
 - id: command
-  uses: knowledge-work/command-action@v1
+  uses: knowledge-work/command-action@v2
   with:
     command: 'preview'
 ```
 
 This sets up your custom IssueOps command to interpret comments on Issues and Pull Requests.
 
-Refer to [Inputs](#inbox_tray-inputs) for other options.
+Subscribe the workflow to `issue_comment` with `types: [created]`, as in the example below. Without it, the workflow also runs when a comment is edited, so an existing command comment can be re-run or rewritten.
+
+Refer to [Inputs](#inbox_tray-inputs) for other options, and to [Restricting who can run a command](#restricting-who-can-run-a-command) before running anything privileged.
+
+> [!tip]
+> For production workflows, pin the action to a full commit SHA (`knowledge-work/command-action@<sha> # v2.x.y`) instead of the floating `v2` tag.
 
 ### Example
 
@@ -56,7 +61,7 @@ jobs:
     steps:
       # Set up the ".greet" command.
       - id: command
-        uses: knowledge-work/command-action@v1
+        uses: knowledge-work/command-action@v2
         with:
           command: 'greet'
 
@@ -167,10 +172,12 @@ Supports null in JSON format.
 
 <!-- gha-inputs-start -->
 
-| ID                 | Required           | Default                         | Description                                                                                                                                               |
-| :----------------- | :----------------- | :------------------------------ | :-------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `command`          | :white_check_mark: | n/a                             | The name of the command to be used in IssueOps, which can be specified as a comma-separated list.                                                         |
-| `allowed_contexts` |                    | `issue,pull_request,discussion` | The comment contexts that trigger the IssueOps command, specified as a comma-separated list. Allowed values: `"issue"`, `"pull_request"`, `"discussion"`. |
+| ID                    | Required           | Default                         | Description                                                                                                                                                                                                                                                                                                         |
+| :-------------------- | :----------------- | :------------------------------ | :------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| `command`             | :white_check_mark: | n/a                             | The name of the command to be used in IssueOps, which can be specified as a comma-separated list.                                                                                                                                                                                                                   |
+| `allowed_contexts`    |                    | `issue,pull_request,discussion` | The comment contexts that trigger the IssueOps command, specified as a comma-separated list. Allowed values: `"issue"`, `"pull_request"`, `"discussion"`.                                                                                                                                                           |
+| `allowed_permissions` |                    | n/a                             | Restricts the command to event senders whose repository role is in this comma-separated list, looked up with `github_token`. Allowed values: `"admin"`, `"maintain"`, `"write"`, `"triage"`, `"read"`. When unset, no permission check is performed. On a public repository, `"read"` lets any GitHub user through. |
+| `github_token`        |                    | `${{ github.token }}`           | The token used to look up the repository role of the event sender when `allowed_permissions` is set.                                                                                                                                                                                                                |
 
 <!-- gha-inputs-end -->
 
@@ -178,22 +185,43 @@ Supports null in JSON format.
 
 <!-- gha-outputs-start -->
 
-| ID             | Description                                                                                                                                                                          |
-| :------------- | :----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `continue`     | Indicates whether the IssueOps command was triggered and the workflow should continue with the string `"true"`. If the action did not complete successfully, `"false"` will be used. |
-| `params`       | The parameters of the triggered IssueOps command, provided as a JSON string.                                                                                                         |
-| `comment_id`   | The ID of the comment that triggered this action.                                                                                                                                    |
-| `actor`        | The GitHub handle of the actor who executed the IssueOps command.                                                                                                                    |
-| `issue_number` | [Deprecated] The issue number of the comment that triggered this action. Use `number` instead. This output will be removed in the next major release.                                |
-| `number`       | The number of the issue, pull request, or discussion that triggered this action.                                                                                                     |
-| `context`      | The context that triggered this action. One of `"issue"`, `"pull_request"`, or `"discussion"`.                                                                                       |
-| `command`      | The command of the triggered IssueOps command.                                                                                                                                       |
+| ID             | Description                                                                                                                                                                                                                                                                      |
+| :------------- | :------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `continue`     | The string `"true"` when the comment contains an allowed IssueOps command (and, if `allowed_permissions` is set, the actor holds one of those permissions); otherwise `"false"`. Without `allowed_permissions` this is a syntax check only and does not authorize the commenter. |
+| `params`       | The parameters of the triggered IssueOps command, provided as a JSON string.                                                                                                                                                                                                     |
+| `comment_id`   | The ID of the comment that triggered this action.                                                                                                                                                                                                                                |
+| `actor`        | The GitHub handle of the user who triggered the event (the event sender). On an edited comment this is the editor, not the original author.                                                                                                                                      |
+| `issue_number` | [Deprecated] The issue number of the comment that triggered this action. Use `number` instead. This output will be removed in the next major release.                                                                                                                            |
+| `number`       | The number of the issue, pull request, or discussion that triggered this action.                                                                                                                                                                                                 |
+| `context`      | The context that triggered this action. One of `"issue"`, `"pull_request"`, or `"discussion"`.                                                                                                                                                                                   |
+| `command`      | The command of the triggered IssueOps command.                                                                                                                                                                                                                                   |
 
 <!-- gha-outputs-end -->
 
 ## :bulb: TIPS
 
 A section introducing tips for implementing IssueOps commands.
+
+### Restricting who can run a command
+
+`outputs.continue` only tells you that the comment contains one of your commands. By default it does not check who wrote the comment, so on a public repository anyone who can comment can make it `"true"`. Before a command runs anything privileged (deployments, secrets, a write token), restrict it with `allowed_permissions`:
+
+```yaml
+- id: command
+  uses: knowledge-work/command-action@v2
+  with:
+    command: 'deploy'
+    allowed_permissions: 'write,maintain,admin'
+```
+
+With `allowed_permissions` set, the action looks up the repository role of the event sender (`outputs.actor`) through the [repository permissions API](https://docs.github.com/en/rest/collaborators/collaborators#get-repository-permissions-for-a-user), using `github_token` (the workflow's `GITHUB_TOKEN` by default), and emits `continue: "false"` unless the role is in the list.
+
+- The lookup needs only repository Metadata read access, which `GITHUB_TOKEN` always has, so no extra `permissions:` entry is required.
+- An empty value (for example an unset `${{ vars.* }}`) is the same as leaving `allowed_permissions` out: no check is performed.
+- Allowed values are `admin`, `maintain`, `write`, `triage`, and `read`. Custom repository roles are reported under their own name and are therefore never allowed.
+- On a public repository every GitHub user has `read`, so listing it allows everyone.
+- If the lookup fails (for example for a bot account, or a token without access), the action emits a warning and `continue: "false"`.
+- `outputs.actor` is the user who triggered the event. On an edited comment that is the editor, not the original author.
 
 ### Triggering from GitHub Discussions
 
@@ -215,7 +243,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - id: command
-        uses: knowledge-work/command-action@v1
+        uses: knowledge-work/command-action@v2
         with:
           command: 'greet'
       - if: ${{ steps.command.outputs.continue == 'true' }}
@@ -239,7 +267,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - id: command
-        uses: knowledge-work/command-action@v1
+        uses: knowledge-work/command-action@v2
         with:
           command: 'greet'
 

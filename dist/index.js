@@ -37918,7 +37918,7 @@ const defaults = {
         fetch: getProxyFetch(baseUrl)
     }
 };
-const utils_GitHub = Octokit.plugin(restEndpointMethods, paginateRest).defaults(defaults);
+const GitHub = Octokit.plugin(restEndpointMethods, paginateRest).defaults(defaults);
 
 /**
  * Convience function to correctly format Octokit Options to pass into the constructor.
@@ -37926,15 +37926,15 @@ const utils_GitHub = Octokit.plugin(restEndpointMethods, paginateRest).defaults(
  * @param     token    the repo PAT or GITHUB_TOKEN
  * @param     options  other options to set
  */
-function utils_getOctokitOptions(token, options) {
+function getOctokitOptions(token, options) {
     const opts = Object.assign({}, options || {}); // Shallow clone - don't mutate the object provided by the caller
     // Auth
-    const auth = Utils.getAuthString(token, opts);
+    const auth = getAuthString(token, opts);
     if (auth) {
         opts.auth = auth;
     }
     // Orchestration ID
-    const userAgent = Utils.getUserAgentWithOrchestrationId(opts.userAgent);
+    const userAgent = getUserAgentWithOrchestrationId(opts.userAgent);
     if (userAgent) {
         opts.userAgent = userAgent;
     }
@@ -37963,6 +37963,8 @@ function getOctokit(token, options, ...additionalPlugins) {
 const keys = [
     ['command', true],
     ['allowed_contexts', true],
+    ['allowed_permissions', false],
+    ['github_token', true],
 ];
 const getInputs = () => {
     const inputs = Object.create(null);
@@ -38081,6 +38083,8 @@ const str2array = (input) => input
 
 
 const validContexts = new Set(['issue', 'pull_request', 'discussion']);
+// The actor is the event sender: on `edited` / `deleted` events `comment.user` is still the
+// original author, so reporting it would attribute another user's edit to them.
 const resolveCommentContext = () => {
     if (github_context.eventName === 'issue_comment') {
         const isPr = github_context.payload.issue?.['pull_request'] != null;
@@ -38088,7 +38092,7 @@ const resolveCommentContext = () => {
             kind: isPr ? 'pull_request' : 'issue',
             number: github_context.payload.issue.number,
             commentId: github_context.payload.comment.id,
-            actor: github_context.payload.comment['user'].login,
+            actor: github_context.payload.sender['login'],
         };
     }
     if (github_context.eventName === 'discussion_comment') {
@@ -38097,7 +38101,7 @@ const resolveCommentContext = () => {
             kind: 'discussion',
             number: discussion.number,
             commentId: github_context.payload.comment.id,
-            actor: github_context.payload.comment['user'].login,
+            actor: github_context.payload.sender['login'],
         };
     }
     return null;
@@ -38116,9 +38120,42 @@ const isValidContext = (inputs, kind) => {
     }
     return true;
 };
+const validPermissions = new Set(['admin', 'maintain', 'write', 'triage', 'read']);
+const hasAllowedPermission = async (inputs, actor) => {
+    if (inputs.allowed_permissions === null) {
+        return true;
+    }
+    const allowedPermissions = str2array(inputs.allowed_permissions);
+    const invalidPermissions = allowedPermissions.filter((p) => !validPermissions.has(p));
+    if (invalidPermissions.length > 0) {
+        const list = [...validPermissions].map((p) => `"${p}"`).join(', ');
+        core/* warning */.$e(`The "allowed_permissions" must be a comma-separated string of ${list}, but received "${invalidPermissions.join(',')}".`);
+        return false;
+    }
+    if (allowedPermissions.includes('read')) {
+        core/* warning */.$e('The "allowed_permissions" includes "read", which every GitHub user has on a public repository.');
+    }
+    let role;
+    try {
+        const { data } = await getOctokit(inputs.github_token).rest.repos.getCollaboratorPermissionLevel({
+            ...github_context.repo,
+            username: actor,
+        });
+        role = data.role_name;
+    }
+    catch (e) {
+        core/* warning */.$e(`Failed to look up the repository permission of "${actor}", so the trigger has been canceled. ${e instanceof Error ? e.message : String(e)}`);
+        return false;
+    }
+    if (!allowedPermissions.includes(role)) {
+        core/* info */.pq(`💡"${actor}" has the "${role}" permission, which is not in allowed_permissions (${allowedPermissions.join(',')}).`);
+        return false;
+    }
+    return true;
+};
 const run = async () => {
     const inputs = getInputs();
-    core/* debug */.Yz(`inputs: ${JSON.stringify(inputs)}`);
+    core/* debug */.Yz(`inputs: ${JSON.stringify(inputs, (key, value) => (key === 'github_token' ? undefined : value))}`);
     const ctx = resolveCommentContext();
     if (ctx === null) {
         core/* warning */.$e(`This action only supports the "issue_comment" or "discussion_comment" event, but received "${github_context.eventName}".`);
@@ -38155,11 +38192,18 @@ const run = async () => {
         core/* info */.pq(`The "${result.command}" command was detected in the comment. However, since it is not included in the list of commands ("${commands.join(', ')}"), the trigger has been canceled.`);
         return 0;
     }
+    if (github_context.payload.action === 'deleted') {
+        core/* setOutput */.uH('continue', 'false');
+        core/* info */.pq(`The "${result.command}" command was found in a deleted comment, so the trigger has been canceled.`);
+        return 0;
+    }
+    if (!(await hasAllowedPermission(inputs, ctx.actor))) {
+        core/* setOutput */.uH('continue', 'false');
+        return 0;
+    }
     core/* setOutput */.uH('continue', 'true');
     core/* setOutput */.uH('command', result.command);
     core/* setOutput */.uH('params', JSON.stringify(result.params));
-    core/* info */.pq('params:');
-    core/* info */.pq(JSON.stringify(result.params, null, 2));
     return 0;
 };
 

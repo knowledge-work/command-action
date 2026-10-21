@@ -7,10 +7,17 @@ const mocks = vi.hoisted(() => ({
   warning: vi.fn(),
   info: vi.fn(),
   debug: vi.fn(),
-  inputs: { command: 'foo', allowed_contexts: 'issue,pull_request' } satisfies Inputs,
+  inputs: {
+    command: 'foo',
+    allowed_contexts: 'issue,pull_request',
+    allowed_permissions: null as string | null,
+    github_token: 'test-token',
+  } satisfies Inputs,
+  getPermission: vi.fn(),
   context: {
     eventName: 'issue_comment' as string,
     payload: {} as Record<string, unknown>,
+    repo: { owner: 'o', repo: 'r' },
   },
 }));
 
@@ -25,6 +32,7 @@ vi.mock('@actions/core', () => ({
 
 vi.mock('@actions/github', () => ({
   context: mocks.context,
+  getOctokit: () => ({ rest: { repos: { getCollaboratorPermissionLevel: mocks.getPermission } } }),
 }));
 
 const { run } = await import('./main.js');
@@ -43,6 +51,7 @@ beforeEach(() => {
   mocks.context.payload = {
     issue: { number: 0 },
     comment: { id: 0, body: '.foo', user: { login: 'alice' } },
+    sender: { login: 'alice' },
   };
 });
 
@@ -50,6 +59,7 @@ test('issue context emits number and context="issue" alongside issue_number', as
   mocks.context.payload = {
     issue: { number: 42 },
     comment: { id: 1001, body: '.foo', user: { login: 'alice' } },
+    sender: { login: 'alice' },
   };
 
   await run();
@@ -68,6 +78,7 @@ test('pull_request context emits number and context="pull_request" alongside iss
       pull_request: { url: 'https://api.github.com/repos/o/r/pulls/99' },
     },
     comment: { id: 2002, body: '.foo', user: { login: 'bob' } },
+    sender: { login: 'bob' },
   };
 
   await run();
@@ -84,6 +95,7 @@ test('invalid context emits only continue=false and never emits number / context
   mocks.context.payload = {
     issue: { number: 7 },
     comment: { id: 3003, body: '.foo', user: { login: 'eve' } },
+    sender: { login: 'eve' },
   };
 
   await run();
@@ -104,6 +116,7 @@ test('discussion context emits number and context="discussion" without issue_num
   mocks.context.payload = {
     discussion: { number: 7 },
     comment: { id: 4004, body: '.foo', user: { login: 'carol' } },
+    sender: { login: 'carol' },
   };
 
   await run();
@@ -122,6 +135,7 @@ test('allowed_contexts="issue" rejects a discussion_comment via the filter', asy
   mocks.context.payload = {
     discussion: { number: 7 },
     comment: { id: 4004, body: '.foo', user: { login: 'carol' } },
+    sender: { login: 'carol' },
   };
 
   await run();
@@ -139,6 +153,7 @@ test('allowed_contexts="discussion" accepts a discussion_comment (single-context
   mocks.context.payload = {
     discussion: { number: 7 },
     comment: { id: 4004, body: '.foo', user: { login: 'carol' } },
+    sender: { login: 'carol' },
   };
 
   await run();
@@ -159,6 +174,7 @@ test('allowed_contexts="discussion" rejects an issue_comment (heterogeneous sing
   mocks.context.payload = {
     issue: { number: 42 },
     comment: { id: 1001, body: '.foo', user: { login: 'alice' } },
+    sender: { login: 'alice' },
   };
 
   await run();
