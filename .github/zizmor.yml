@@ -1,0 +1,5 @@
+rules:
+  # The `$/` form it asks for is rejected by actionlint, and the e2e dogfood job must run the
+  # dist that `pnpm build` produces during the run, which `$/` cannot load.
+  self-repository:
+    disable: true
