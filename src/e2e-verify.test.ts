@@ -1,5 +1,11 @@
 import { describe, expect, test } from 'vitest';
-import { type ActualOutputs, compare, E2E_DIRECTIVE_KEY, extractExpectDirective } from './e2e-verify.js';
+import {
+  type ActualOutputs,
+  compare,
+  E2E_DIRECTIVE_KEY,
+  extractExpectDirective,
+  withCommandsStopped,
+} from './e2e-verify.js';
 
 const baseActual = (overrides: Partial<ActualOutputs> = {}): ActualOutputs => ({
   outcome: 'success',
@@ -177,5 +183,16 @@ describe('compare', () => {
     const mismatches = compare({ continue: 'false', params: {} }, actual);
     expect(mismatches).toHaveLength(1);
     expect(mismatches[0]).toMatch(/^params: expected the action to emit params, but the params output was unset/);
+  });
+});
+
+describe('withCommandsStopped', () => {
+  test('wraps the lines between a stop-commands marker and its resume token', () => {
+    expect(withCommandsStopped(['  - a', '##[warning]b'], 'tok')).toEqual([
+      '::stop-commands::tok',
+      '  - a',
+      '##[warning]b',
+      '::tok::',
+    ]);
   });
 });

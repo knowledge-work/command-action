@@ -1,7 +1,14 @@
+import { randomUUID } from 'node:crypto';
 import process from 'node:process';
-import { type ActualOutputs, compare, extractExpectDirective } from '../src/e2e-verify.js';
+import { type ActualOutputs, compare, extractExpectDirective, withCommandsStopped } from '../src/e2e-verify.js';
 
 const env = (key: string): string => process.env[key] ?? '';
+
+const printStopped = (lines: string[]) => {
+  for (const line of withCommandsStopped(lines, randomUUID())) {
+    console.error(line);
+  }
+};
 
 const actual: ActualOutputs = {
   outcome: env('ACTUAL_OUTCOME'),
@@ -19,7 +26,7 @@ let directive: Record<string, unknown> | null;
 try {
   directive = extractExpectDirective(actual.params);
 } catch (e) {
-  console.error(`Failed to parse the dogfood directive — ${(e as Error).message}`);
+  printStopped([`Failed to parse the dogfood directive — ${(e as Error).message}`]);
   process.exit(1);
 }
 
@@ -38,10 +45,7 @@ if (directive === null) {
 
 const mismatches = compare(directive, actual);
 if (mismatches.length > 0) {
-  console.error('E2E mismatch:');
-  for (const m of mismatches) {
-    console.error('  - ' + m);
-  }
+  printStopped(['E2E mismatch:', ...mismatches.map((m) => '  - ' + m)]);
   process.exit(1);
 }
 
