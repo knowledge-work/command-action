@@ -174,3 +174,13 @@ export const compare = (
 
   return mismatches;
 };
+
+/**
+ * Wrap lines that carry comment-derived text between `::stop-commands::<token>` and `::<token>::`,
+ * so the runner prints them verbatim instead of reading any of them as a workflow command.
+ */
+export const withCommandsStopped = (lines: string[], token: string): string[] => [
+  `::stop-commands::${token}`,
+  ...lines,
+  `::${token}::`,
+];

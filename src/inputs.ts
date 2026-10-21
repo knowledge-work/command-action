@@ -5,11 +5,15 @@ import * as core from '@actions/core';
 const keys: [key: string, required: boolean][] = [
   ['command', true],
   ['allowed_contexts', true],
+  ['allowed_permissions', false],
+  ['github_token', true],
 ];
 
 export type Inputs = {
   command: string;
   allowed_contexts: string;
+  allowed_permissions: string | null;
+  github_token: string;
 };
 
 export const getInputs = (): Inputs => {

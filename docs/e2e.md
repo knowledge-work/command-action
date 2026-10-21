@@ -78,7 +78,7 @@ Smoke run (no directive — only verifies the action ran end-to-end):
 
 The directive can only be carried on comments that produce `continue=true`,
 because the action only emits the `params` output on that path
-(`src/main.ts:110-112`). For negative cases — filtered `allowed_contexts`,
+(the success path at the end of `run()` in `src/main.ts`). For negative cases — filtered `allowed_contexts`,
 command not in the allow-list, malformed params — the directive cannot reach
 the verification step. Use the smoke run convention for those, and confirm the
 filter behavior manually in the workflow log (Verify step shows
@@ -102,16 +102,20 @@ approves it.
 
 ### Approval-then-edit race (known caveat)
 
-A comment author can edit the comment body between the moment a reviewer
-approves the `e2e` environment and the moment the workflow runs. The workflow
-re-reads `github.event.comment.body` at run start (via the action's own payload
-access), so an edited directive will be evaluated, not the body the reviewer
-saw.
+Each run evaluates the event payload captured when the event fired, not the
+comment as it reads now. Every edit of a comment starts a separate run
+(`edited` is subscribed), and the concurrency group keeps one running and one
+pending run per comment, replacing an older pending run. A reviewer looking at
+the live comment can therefore approve a run whose captured body differs from
+what they see.
 
 Mitigation is operational rather than code-side:
 
-- Reviewers should screenshot or paste the comment body at approval time and
-  compare it with the workflow's Verify step output.
+- Before approving, reviewers should check the comment's edit history: a
+  pending run that an edit started evaluates that edit's body.
+- After approving, the action step's debug log (`parse result: ...`, shown when
+  the run is re-run with debug logging enabled) shows the command and params
+  parsed from the body that was actually evaluated.
 - The risk is bounded because the e2e job has no write permissions and the
   action under test parses only public comment text.
 
@@ -122,7 +126,10 @@ minimal-permissions design.
 
 ## Required repo settings
 
-These are one-time admin tasks. Without them, the workflow will fail to start.
+These are one-time admin tasks. A workflow that references an environment that
+does not exist does not fail: GitHub creates the environment on the first run
+with no protection rules, so the `dogfood` job would run without approval.
+Configure the reviewers before relying on the gate.
 
 1. **Enable Discussions** on `knowledge-work/command-action`.
    Settings → General → Features → check `Discussions`.

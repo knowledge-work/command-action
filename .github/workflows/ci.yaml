@@ -44,13 +44,15 @@ jobs:
 
       - uses: ./.github/actions/setup
 
-      - run: pnpm build
+      # Build from an empty dist/ so committed files that the build does not produce show up as deletions.
+      - run: rm -rf dist && pnpm build
 
       - name: Compare the expected and actual dist/ directories
         id: diff
         run: |
-          if [ "$(git diff --ignore-space-at-eol dist/ | wc -l)" -gt "0" ]; then
-            echo "Detected uncommitted changes after build.  See status below:"
+          if [ -n "$(git status --porcelain --untracked-files=all -- dist/)" ]; then
+            echo "Detected changes after a clean build.  See status below:"
+            git status --porcelain --untracked-files=all -- dist/
             git diff
             exit 1
           fi
