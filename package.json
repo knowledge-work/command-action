@@ -31,7 +31,7 @@
     "@tsconfig/strictest": "2.0.8",
     "@types/node": "24.19.2",
     "@unicode/unicode-15.0.0": "2.0.7",
-    "conventional-changelog-conventionalcommits": "9.3.1",
+    "conventional-changelog-conventionalcommits": "10.4.1",
     "gha-docgen": "2.0.0",
     "lefthook": "2.2.2",
     "oxfmt": "0.73.0",
