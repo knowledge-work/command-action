@@ -27,7 +27,7 @@
     "@semantic-release/commit-analyzer": "13.0.1",
     "@semantic-release/github": "12.0.10",
     "@semantic-release/release-notes-generator": "14.1.1",
-    "@tsconfig/node24": "24.0.5",
+    "@tsconfig/node26": "26.0.0",
     "@tsconfig/strictest": "2.0.8",
     "@types/node": "24.19.2",
     "@unicode/unicode-15.0.0": "2.0.7",
