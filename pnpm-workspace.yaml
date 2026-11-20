@@ -10,3 +10,5 @@ minimumReleaseAgeExclude:
   - vite@8.0.16 || 8.1.6
   # Renovate security update: vitest@4.1.11
   - vitest@4.1.11
+  # Security update: @ts-morph/common@0.29.1 (moves minimatch to ^11.0.1)
+  - '@ts-morph/common@0.29.1'
