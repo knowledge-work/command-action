@@ -34,5 +34,13 @@
       matchUpdateTypes: ['minor', 'patch', 'digest', 'pin'],
       groupName: 'github-actions (non-major)',
     },
+    // The action runs on the runner's Node (`runs.using` in action.yaml), and the runner
+    // only offers node24. Moving the dev toolchain past it would let code that the
+    // runtime cannot run pass CI, so bump these together with `runs.using` by hand.
+    {
+      matchPackageNames: ['node', '@types/node', '/^@tsconfig/node\\d+$/'],
+      matchUpdateTypes: ['major', 'replacement'],
+      enabled: false,
+    },
   ],
 }
