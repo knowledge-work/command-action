@@ -10,9 +10,9 @@ inputs:
 runs:
   using: composite
   steps:
-    - uses: jdx/mise-action@08ae2a091c038e1e05ec6f5115dc5c69d5a2a6b8 # v5.1.2
+    - uses: jdx/mise-action@d5574b52816a478f9d4e6529a3f6ff17a8a36785 # v5.2.8
       with:
-        version: 2026.10.17
+        version: 2026.11.8
 
     - name: Get pnpm store directory
       id: pnpm-store
