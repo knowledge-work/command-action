@@ -29,7 +29,7 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 10
     steps:
-      - uses: pkgdeps/automerge-gate@9ab7a1d211aca48667cdbf94cca05ae67b64eba2 # v5.0.5
+      - uses: pkgdeps/automerge-gate@e236ff324ef647b5810d1a563739bc8ed9e8caf2 # v5.1.0
         with:
           gate-mode: 'public'
           ignore-checks: |
